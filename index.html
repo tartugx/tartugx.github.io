@@ -1,13 +1,100 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>the truth.</title>
-  <meta property="og:title" content="the truth.">
-  <meta property="og:description" content="10/03/2026">
-</head>
-<body>
-  <p>The truth is coming: 10/03/2026</p>
+<meta charset="UTF-8">
+<title>the truth.</title>
 
-  <p>yes</p>
+<meta property="og:title" content="the truth.">
+<meta property="og:description" content="10/03/2026">
+
+<style>
+
+body {
+  margin: 0;
+  background: #000;
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+  height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.container {
+  max-width: 800px;
+}
+
+h1 {
+  font-weight: normal;
+  letter-spacing: 2px;
+}
+
+#timer {
+  margin-top: 30px;
+  font-size: 2rem;
+  letter-spacing: 3px;
+}
+
+.small {
+  margin-top: 20px;
+  opacity: 0.7;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>The truth is coming: 10/03/2026</h1>
+
+<div id="timer">Loading...</div>
+
+</div>
+
+<script>
+
+const targetDate = new Date("2026-03-10T17:00:00+00:00").getTime();
+
+function updateTimer() {
+
+  const now = new Date().getTime();
+  const distance = targetDate - now;
+
+  if (distance <= 0) {
+    document.getElementById("timer").innerHTML = "The truth has arrived.";
+    return;
+  }
+
+  const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+
+  const hours = Math.floor(
+    (distance % (1000 * 60 * 60 * 24)) /
+    (1000 * 60 * 60)
+  );
+
+  const minutes = Math.floor(
+    (distance % (1000 * 60 * 60)) /
+    (1000 * 60)
+  );
+
+  const seconds = Math.floor(
+    (distance % (1000 * 60)) /
+    1000
+  );
+
+  document.getElementById("timer").innerHTML =
+    `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+}
+
+updateTimer();
+setInterval(updateTimer, 1000);
+
+</script>
+
 </body>
 </html>
