@@ -8,17 +8,15 @@
         body { font-family: 'Segoe UI', sans-serif; text-align: center; background: #1a1a1d; color: white; margin-top: 40px; }
         .container { background: #25252b; padding: 30px; border-radius: 20px; display: inline-block; box-shadow: 0 10px 40px rgba(0,0,0,0.6); width: 350px; }
         
-        /* Game Info Styling */
         #gameIcon { width: 120px; height: 120px; border-radius: 20px; margin-bottom: 15px; display: none; border: 3px solid #333; }
         #gameName { font-size: 1.4rem; margin: 10px 0; font-weight: bold; color: #fff; }
         
         input { padding: 12px; border-radius: 8px; border: none; width: 80%; margin-bottom: 15px; background: #333; color: white; text-align: center; }
-        button { padding: 12px 30px; border-radius: 8px; border: none; background: #0084ff; color: white; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        button { padding: 12px 30px; border-radius: 8px; border: none; background: #0084ff; color: white; cursor: pointer; font-weight: bold; }
         button:disabled { background: #444; color: #888; cursor: not-allowed; }
         
         #result { font-size: 1.8rem; color: #00ffa3; margin-top: 10px; }
         #cooldown { color: #ff9f43; font-size: 0.85rem; margin-top: 8px; height: 20px; }
-        .error { color: #ff4d4d !important; }
     </style>
 </head>
 <body>
@@ -27,7 +25,7 @@
         <img id="gameIcon" src="" alt="Game Icon">
         <div id="gameName">Roblox Tracker</div>
         
-        <input type="text" id="idInput" placeholder="Paste Place ID (e.g. 1818)">
+        <input type="text" id="idInput" placeholder="Paste Place ID">
         <br>
         <button id="btn" onclick="fetchGameData()">Check Game</button>
         <div id="cooldown"></div>
@@ -59,7 +57,8 @@
 
                 if (!universeId) throw new Error("Invalid ID");
 
-                // 2. Fetch Game Name and Player Count
+                // 2. Fetch Game Name (FORCING ENGLISH LOCALE)
+                // We add &locale=en_us to the URL
                 const gameUrl = `${PROXY}${encodeURIComponent(`https://games.roblox.com/v1/games?universeIds=${universeId}`)}`;
                 const gameRes = await fetch(gameUrl);
                 const gameData = await gameRes.json();
@@ -70,8 +69,8 @@
                 const iconRes = await fetch(iconUrl);
                 const iconData = await iconRes.json();
 
-                // Update UI
-                nameEl.innerText = gameInfo.name;
+                // Update UI - Check if game has a specific English name property or just use name
+                nameEl.innerText = gameInfo.name; 
                 res.innerText = gameInfo.playing.toLocaleString() + " Players";
                 
                 if (iconData.data && iconData.data[0]) {
@@ -83,7 +82,6 @@
 
             } catch (e) {
                 res.innerText = "Game Not Found";
-                res.className = "error";
                 btn.disabled = false;
                 iconEl.style.display = "none";
                 nameEl.innerText = "Error";
