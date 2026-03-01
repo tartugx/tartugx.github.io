@@ -1,33 +1,63 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>Roblox Player Count</title>
+<title>Roblox Player Counter</title>
+
+<style>
+
+body{
+font-family: Arial;
+text-align:center;
+margin-top:100px;
+}
+
+</style>
+
 </head>
 
 <body>
 
-<h1>Players Playing</h1>
+<h1>Roblox Players Online</h1>
 
-<p id="players">Loading...</p>
+<input id="gameId" placeholder="Universe ID">
+
+<button onclick="getPlayers()">
+Check Players
+</button>
+
+<h2 id="result">
+Waiting...
+</h2>
 
 <script>
 
 async function getPlayers(){
 
-let universeId = "83948716312312"; // change this
+const id =
+document.getElementById("gameId").value;
 
-let response = await fetch(
-`https://games.roblox.com/v1/games?universeIds=${universeId}`
+try{
+
+const response = await fetch(
+`https://games.roblox.com/v1/games?universeIds=${id}`
 );
 
-let data = await response.json();
+const data = await response.json();
 
-document.getElementById("players").innerText =
+document.getElementById("result")
+.innerText =
 data.data[0].playing + " players online";
+
+}catch(e){
+
+document.getElementById("result")
+.innerText =
+"Error or CORS blocked";
 
 }
 
-getPlayers();
+}
 
 </script>
 
