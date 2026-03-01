@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Roblox Player Count</title>
+</head>
+
+<body>
+
+<h1>Players Playing</h1>
+
+<p id="players">Loading...</p>
+
+<script>
+
+async function getPlayers(){
+
+let universeId = "83948716312312"; // change this
+
+let response = await fetch(
+`https://games.roblox.com/v1/games?universeIds=${universeId}`
+);
+
+let data = await response.json();
+
+document.getElementById("players").innerText =
+data.data[0].playing + " players online";
+
+}
+
+getPlayers();
+
+</script>
+
+</body>
+</html>
