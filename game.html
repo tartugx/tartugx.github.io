@@ -5,153 +5,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roblox Player Counter</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            text-align: center;
-            margin-top: 100px;
-            background-color: #f4f4f9;
-            color: #333;
-        }
-        .container {
-            background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            display: inline-block;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            min-width: 320px;
-        }
-        input {
-            padding: 12px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            width: 80%;
-            margin-bottom: 15px;
-            outline: none;
-        }
-        button {
-            padding: 10px 25px;
-            font-size: 16px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        button:disabled {
-            background-color: #a0a0a0;
-            cursor: not-allowed;
-        }
-        #result {
-            margin-top: 20px;
-            font-size: 1.4rem;
-            color: #2c3e50;
-        }
-        #cooldownText {
-            margin-top: 10px;
-            font-size: 0.9rem;
-            color: #e67e22;
-            height: 20px; /* Prevents layout jump */
-        }
-        .error { color: #dc3545 !important; }
+        body { font-family: 'Segoe UI', sans-serif; text-align: center; margin-top: 50px; background: #1a1a1d; color: white; }
+        .container { background: #25252b; padding: 30px; border-radius: 15px; display: inline-block; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        input { padding: 12px; border-radius: 5px; border: none; width: 250px; margin-bottom: 10px; font-size: 16px; }
+        button { padding: 12px 25px; border-radius: 5px; border: none; background: #0084ff; color: white; cursor: pointer; font-weight: bold; }
+        button:disabled { background: #555; cursor: not-allowed; }
+        #result { font-size: 2rem; margin-top: 20px; color: #00ffa3; }
+        #cooldown { color: #ff9f43; font-size: 0.9rem; margin-top: 5px; height: 20px; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Roblox Players</h1>
-        <p>Enter Universe ID</p>
-        
-        <input type="number" id="gameId" placeholder="e.g. 1104443913">
+        <h1>Roblox Player Tracker</h1>
+        <input type="text" id="idInput" placeholder="Paste Place ID or Universe ID">
         <br>
-        <button id="checkBtn" onclick="getPlayers()">Check Players</button>
-
-        <div id="cooldownText"></div>
-        <h2 id="result">Ready</h2>
+        <button id="btn" onclick="fetchData()">Check Status</button>
+        <div id="cooldown"></div>
+        <div id="result">Ready</div>
     </div>
 
     <script>
-        let lastRequestTime = 0;
-        const cooldownMs = 60000; // 1 minute in milliseconds
-        let timerInterval;
+        const PROXY = "https://corsproxy.io/?";
+        let timer;
 
-        async function getPlayers() {
-            const id = document.getElementById("gameId").value.trim();
-            const resultElement = document.getElementById("result");
-            const btn = document.getElementById("checkBtn");
-            const cooldownDisplay = document.getElementById("cooldownText");
+        async function fetchData() {
+            const input = document.getElementById("idInput").value.trim();
+            const res = document.getElementById("result");
+            const btn = document.getElementById("btn");
+            const cool = document.getElementById("cooldown");
 
-            const currentTime = Date.now();
-            const timePassed = currentTime - lastRequestTime;
+            if (!input) return res.innerText = "Enter an ID";
 
-            // 1. Check if cooldown is active
-            if (timePassed < cooldownMs) {
-                const timeLeft = Math.ceil((cooldownMs - timePassed) / 1000);
-                resultElement.innerText = "Too fast!";
-                return;
-            }
-
-            if (!id) {
-                resultElement.innerText = "Enter a Universe ID";
-                resultElement.className = "error";
-                return;
-            }
-
-            // 2. Clear errors and set loading state
-            resultElement.innerText = "Fetching...";
-            resultElement.className = "";
+            res.innerText = "Finding Universe...";
             btn.disabled = true;
 
             try {
-                const proxyUrl = "https://corsproxy.io/?";
-                const targetUrl = `https://games.roblox.com/v1/games?universeIds=${id}`;
+                // STEP 1: Convert Place ID to Universe ID automatically
+                // This ensures that even if you use the URL ID, it still works.
+                const convertUrl = `${PROXY}${encodeURIComponent(`https://apis.roblox.com/universes/v1/places/${input}/universe`)}`;
+                const convResponse = await fetch(convertUrl);
+                const convData = await convResponse.json();
                 
-                const response = await fetch(proxyUrl + encodeURIComponent(targetUrl));
-                const data = await response.json();
+                // If the ID was already a Universe ID, the converter might fail, 
+                // so we fallback to using the original input.
+                const universeId = convData.universeId || input;
 
-                if (data.data && data.data.length > 0) {
-                    const playerCount = data.data[0].playing;
-                    resultElement.innerText = playerCount.toLocaleString() + " players online";
-                    
-                    // 3. Update last successful request time
-                    lastRequestTime = Date.now();
-                    startCooldownTimer(cooldownMs / 1000);
-                    
+                // STEP 2: Fetch player count
+                const gameUrl = `${PROXY}${encodeURIComponent(`https://games.roblox.com/v1/games?universeIds=${universeId}`)}`;
+                const gameResponse = await fetch(gameUrl);
+                const gameData = await gameResponse.json();
+
+                if (gameData.data && gameData.data.length > 0) {
+                    const players = gameData.data[0].playing;
+                    res.innerText = players.toLocaleString() + " Players";
+                    startCooldown(60);
                 } else {
-                    resultElement.innerText = "ID not found!";
-                    resultElement.className = "error";
+                    res.innerText = "Invalid ID";
                     btn.disabled = false;
                 }
-
             } catch (e) {
-                resultElement.innerText = "Error fetching data";
-                resultElement.className = "error";
+                res.innerText = "Error (Check ID)";
                 btn.disabled = false;
             }
         }
 
-        function startCooldownTimer(seconds) {
-            const btn = document.getElementById("checkBtn");
-            const cooldownDisplay = document.getElementById("cooldownText");
-            
+        function startCooldown(seconds) {
+            const btn = document.getElementById("btn");
+            const cool = document.getElementById("cooldown");
             let remaining = seconds;
             
-            btn.disabled = true;
-            
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
+            timer = setInterval(() => {
                 remaining--;
                 if (remaining <= 0) {
-                    clearInterval(timerInterval);
+                    clearInterval(timer);
                     btn.disabled = false;
-                    cooldownDisplay.innerText = "";
+                    cool.innerText = "";
                 } else {
-                    cooldownDisplay.innerText = `Cooldown: ${remaining}s remaining`;
+                    cool.innerText = `Wait ${remaining}s to refresh`;
                 }
             }, 1000);
         }
     </script>
-
 </body>
 </html>
