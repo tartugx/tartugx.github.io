@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Roblox Player Counter</title>
+
+<style>
+
+body{
+font-family: Arial;
+text-align:center;
+margin-top:100px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Roblox Players Online</h1>
+
+<input id="gameId" placeholder="Universe ID">
+
+<button onclick="getPlayers()">
+Check Players
+</button>
+
+<h2 id="result">
+Waiting...
+</h2>
+
+<script>
+
+async function getPlayers(){
+
+const id =
+document.getElementById("gameId").value;
+
+try{
+
+const response = await fetch(
+`https://games.roblox.com/v1/games?universeIds=${id}`
+);
+
+const data = await response.json();
+
+document.getElementById("result")
+.innerText =
+data.data[0].playing + " players online";
+
+}catch(e){
+
+document.getElementById("result")
+.innerText =
+"Error or CORS blocked";
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
