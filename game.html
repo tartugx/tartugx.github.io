@@ -3,24 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox Player Counter</title>
+    <title>Roblox Game Tracker</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; text-align: center; margin-top: 50px; background: #1a1a1d; color: white; }
-        .container { background: #25252b; padding: 30px; border-radius: 15px; display: inline-block; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        input { padding: 12px; border-radius: 5px; border: none; width: 250px; margin-bottom: 10px; font-size: 16px; }
-        button { padding: 12px 25px; border-radius: 5px; border: none; background: #0084ff; color: white; cursor: pointer; font-weight: bold; }
-        button:disabled { background: #555; cursor: not-allowed; }
-        #result { font-size: 2rem; margin-top: 20px; color: #00ffa3; }
-        #cooldown { color: #ff9f43; font-size: 0.9rem; margin-top: 5px; height: 20px; }
+        body { font-family: 'Segoe UI', sans-serif; text-align: center; background: #1a1a1d; color: white; margin-top: 40px; }
+        .container { background: #25252b; padding: 30px; border-radius: 20px; display: inline-block; box-shadow: 0 10px 40px rgba(0,0,0,0.6); width: 350px; }
+        
+        /* Game Info Styling */
+        #gameIcon { width: 120px; height: 120px; border-radius: 20px; margin-bottom: 15px; display: none; border: 3px solid #333; }
+        #gameName { font-size: 1.4rem; margin: 10px 0; font-weight: bold; color: #fff; }
+        
+        input { padding: 12px; border-radius: 8px; border: none; width: 80%; margin-bottom: 15px; background: #333; color: white; text-align: center; }
+        button { padding: 12px 30px; border-radius: 8px; border: none; background: #0084ff; color: white; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        button:disabled { background: #444; color: #888; cursor: not-allowed; }
+        
+        #result { font-size: 1.8rem; color: #00ffa3; margin-top: 10px; }
+        #cooldown { color: #ff9f43; font-size: 0.85rem; margin-top: 8px; height: 20px; }
+        .error { color: #ff4d4d !important; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Roblox Player Tracker</h1>
-        <input type="text" id="idInput" placeholder="Paste Place ID or Universe ID">
+        <img id="gameIcon" src="" alt="Game Icon">
+        <div id="gameName">Roblox Tracker</div>
+        
+        <input type="text" id="idInput" placeholder="Paste Place ID (e.g. 1818)">
         <br>
-        <button id="btn" onclick="fetchData()">Check Status</button>
+        <button id="btn" onclick="fetchGameData()">Check Game</button>
         <div id="cooldown"></div>
         <div id="result">Ready</div>
     </div>
@@ -29,44 +38,55 @@
         const PROXY = "https://corsproxy.io/?";
         let timer;
 
-        async function fetchData() {
+        async function fetchGameData() {
             const input = document.getElementById("idInput").value.trim();
             const res = document.getElementById("result");
             const btn = document.getElementById("btn");
-            const cool = document.getElementById("cooldown");
+            const nameEl = document.getElementById("gameName");
+            const iconEl = document.getElementById("gameIcon");
 
             if (!input) return res.innerText = "Enter an ID";
 
-            res.innerText = "Finding Universe...";
+            res.innerText = "Connecting...";
             btn.disabled = true;
 
             try {
-                // STEP 1: Convert Place ID to Universe ID automatically
-                // This ensures that even if you use the URL ID, it still works.
-                const convertUrl = `${PROXY}${encodeURIComponent(`https://apis.roblox.com/universes/v1/places/${input}/universe`)}`;
-                const convResponse = await fetch(convertUrl);
-                const convData = await convResponse.json();
-                
-                // If the ID was already a Universe ID, the converter might fail, 
-                // so we fallback to using the original input.
-                const universeId = convData.universeId || input;
+                // 1. Convert Place ID to Universe ID
+                const convUrl = `${PROXY}${encodeURIComponent(`https://apis.roblox.com/universes/v1/places/${input}/universe`)}`;
+                const convRes = await fetch(convUrl);
+                const convData = await convRes.json();
+                const universeId = convData.universeId;
 
-                // STEP 2: Fetch player count
+                if (!universeId) throw new Error("Invalid ID");
+
+                // 2. Fetch Game Name and Player Count
                 const gameUrl = `${PROXY}${encodeURIComponent(`https://games.roblox.com/v1/games?universeIds=${universeId}`)}`;
-                const gameResponse = await fetch(gameUrl);
-                const gameData = await gameResponse.json();
+                const gameRes = await fetch(gameUrl);
+                const gameData = await gameRes.json();
+                const gameInfo = gameData.data[0];
 
-                if (gameData.data && gameData.data.length > 0) {
-                    const players = gameData.data[0].playing;
-                    res.innerText = players.toLocaleString() + " Players";
-                    startCooldown(60);
-                } else {
-                    res.innerText = "Invalid ID";
-                    btn.disabled = false;
+                // 3. Fetch Game Icon
+                const iconUrl = `${PROXY}${encodeURIComponent(`https://thumbnails.roblox.com/v1/games/icons?universeIds=${universeId}&size=150x150&format=Png`)}`;
+                const iconRes = await fetch(iconUrl);
+                const iconData = await iconRes.json();
+
+                // Update UI
+                nameEl.innerText = gameInfo.name;
+                res.innerText = gameInfo.playing.toLocaleString() + " Players";
+                
+                if (iconData.data && iconData.data[0]) {
+                    iconEl.src = iconData.data[0].imageUrl;
+                    iconEl.style.display = "inline-block";
                 }
+
+                startCooldown(60);
+
             } catch (e) {
-                res.innerText = "Error (Check ID)";
+                res.innerText = "Game Not Found";
+                res.className = "error";
                 btn.disabled = false;
+                iconEl.style.display = "none";
+                nameEl.innerText = "Error";
             }
         }
 
@@ -82,7 +102,7 @@
                     btn.disabled = false;
                     cool.innerText = "";
                 } else {
-                    cool.innerText = `Wait ${remaining}s to refresh`;
+                    cool.innerText = `Wait ${remaining}s to update`;
                 }
             }, 1000);
         }
