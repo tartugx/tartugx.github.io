@@ -2,99 +2,195 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>the truth.</title>
-
-<meta property="og:title" content="the truth.">
-<meta property="og:description" content="10/03/2026">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thorven Studios</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
 
 body {
-  margin: 0;
-  background: #000;
-  color: #fff;
-  font-family: Arial, Helvetica, sans-serif;
-  height: 100vh;
+  background: #f5f6f8;
+  color: #222;
+}
 
+/* NAVBAR */
+nav {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  padding: 18px 8%;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+}
+
+.logo {
+  font-weight: 800;
+  font-size: 20px;
+  color: #c90000;
+}
+
+.nav-links {
+  display: flex;
+  gap: 40px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #444;
+  font-weight: 600;
+}
+
+.nav-links a:hover {
+  color: #000;
+}
+
+.contact-btn {
+  background: #c90000;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* HERO */
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 100px 8%;
+  gap: 60px;
+}
+
+.hero-text {
+  max-width: 600px;
+}
+
+.hero-text h1 {
+  font-size: 48px;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
+.hero-text p {
+  color: #555;
+  margin-bottom: 30px;
+}
+
+.primary-btn {
+  background: #16c60c;
+  color: white;
+  padding: 14px 28px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.primary-btn:hover {
+  opacity: 0.9;
+}
+
+.hero-image {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.hero-image img {
+  width: 420px;
+  border-radius: 12px;
+}
+
+/* BLOG SECTION */
+.blog {
+  padding: 80px 8%;
+  display: flex;
+  align-items: center;
+  gap: 60px;
+}
+
+.blog-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.04);
+}
+
+.blog-card img {
+  width: 260px;
+  border-radius: 15px;
+}
+
+.blog-text h2 {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.blog-text span {
+  color: #c90000;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* FOOTER */
+footer {
+  padding: 40px;
   text-align: center;
+  background: #fff;
+  border-top: 1px solid #eee;
+  color: #777;
 }
 
-.container {
-  max-width: 800px;
+a {
+  color: #c90000;
 }
-
-h1 {
-  font-weight: normal;
-  letter-spacing: 2px;
-}
-
-#timer {
-  margin-top: 30px;
-  font-size: 2rem;
-  letter-spacing: 3px;
-}
-
-.small {
-  margin-top: 20px;
-  opacity: 0.7;
-}
-
 </style>
 </head>
-
 <body>
 
-<div class="container">
+<nav>
+  <div class="logo">Thorven</div>
+  <div class="nav-links">
+    <a href="#">Home</a>
+    <a href="#">Timer</a>
+  </div>
+  <a id="contact-us" href="https://tartugx.github.io/timer" class="contact-btn">Contact Us</a>
+</nav>
 
-<h1>The truth is coming: 10/03/2026</h1>
+<section class="hero">
+  <div class="hero-text">
+    <h1>Something exciting is coming soon 👀</h1>
+    <p>Stay tuned in here <a href="https://tartugx.github.io/timer">Check the timer:)</a></p>
+   <!--<a href="#" class="primary-btn">Play Now</a>--> 
+  </div>
 
-<div id="timer">Loading...</div>
+  <div class="hero-image">
+    <img src="Thorven.png" alt="">
+  </div>
+</section>
 
-</div>
+<section class="blog">
+  <div class="blog-card">
+    <img src="Thorven.png">
+  </div>
+  <div class="blog-text">
+    <span>LATEST UPDATE</span>
+    <h2>Nothing to see yet</h2>
+    <p>Come back later!</p>
+  </div>
+</section>
 
-<script>
-
-const targetDate = new Date("2026-03-10T17:00:00+00:00").getTime();
-
-function updateTimer() {
-
-  const now = new Date().getTime();
-  const distance = targetDate - now;
-
-  if (distance <= 0) {
-    document.getElementById("timer").innerHTML = "The truth has arrived.";
-    return;
-  }
-
-  const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-
-  const hours = Math.floor(
-    (distance % (1000 * 60 * 60 * 24)) /
-    (1000 * 60 * 60)
-  );
-
-  const minutes = Math.floor(
-    (distance % (1000 * 60 * 60)) /
-    (1000 * 60)
-  );
-
-  const seconds = Math.floor(
-    (distance % (1000 * 60)) /
-    1000
-  );
-
-  document.getElementById("timer").innerHTML =
-    `${days}d ${hours}h ${minutes}m ${seconds}s`;
-
-}
-
-updateTimer();
-setInterval(updateTimer, 1000);
-
-</script>
+<footer>
+  © 2026 Thorven Studios. All rights reserved.
+</footer>
 
 </body>
+
 </html>
