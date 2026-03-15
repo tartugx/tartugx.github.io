@@ -3,79 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox Presence Tracker</title>
+    <title>Terminal // Roblox Presence</title>
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 50px; background: #f4f4f4; }
-        .card { background: white; padding: 20px; border-radius: 10px; display: inline-block; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
-        button { padding: 8px 15px; background: #00a2ff; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        button:hover { background: #0082cc; }
-        #status { font-weight: bold; font-size: 1.2em; margin-top: 20px; }
-        .Offline { color: #777; }
-        .Online { color: #00e676; }
-        .InGame { color: #00a2ff; }
-        .Studio { color: #f68802; }
+        :root {
+            --bg: #0d1117;
+            --card-bg: #161b22;
+            --border: #30363d;
+            --text: #c9d1d9;
+            --accent: #58a6ff;
+            --offline: #8b949e;
+            --online: #3fb950;
+            --ingame: #1f6feb;
+            --studio: #d29922;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            margin: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+        }
+
+        h2 { margin-top: 0; font-size: 1.2rem; color: var(--accent); letter-spacing: 1px; }
+
+        input {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 10px;
+            border-radius: 4px;
+            font-family: inherit;
+            width: 180px;
+            outline: none;
+        }
+
+        input:focus { border-color: var(--accent); }
+
+        button {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+
+        button:hover { opacity: 0.8; }
+
+        #status-display {
+            font-size: 2rem;
+            margin: 25px 0;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        /* Status Colors */
+        .status-0 { color: var(--offline); }
+        .status-1 { color: var(--online); }
+        .status-2 { color: var(--ingame); }
+        .status-3 { color: var(--studio); }
+
+        /* Console Log Styles */
+        .console {
+            background: #000;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-top: 20px;
+            height: 200px;
+            overflow-y: auto;
+            padding: 15px;
+            text-align: left;
+            font-size: 0.85rem;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        .log-entry { margin-bottom: 5px; border-left: 2px solid var(--border); padding-left: 10px; }
+        .log-time { color: #6e7681; margin-right: 10px; }
+        .log-msg { color: #d1d5da; }
+        
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h2>Roblox Presence Tracker</h2>
-    <input type="number" id="userIdInput" placeholder="Enter User ID" value="489113887">
-    <button onclick="updateTarget()">Track User</button>
-    
-    <p id="status">Enter an ID to start</p>
-    <p id="lastUpdate" style="font-size: 0.8em; color: #999;"></p>
+<div class="container">
+    <div class="card">
+        <h2>> SYSTEM_TRACKER</h2>
+        <input type="number" id="userIdInput" value="489113887" placeholder="User ID">
+        <button onclick="updateTarget()">REBOOT</button>
+        
+        <div id="status-display" class="status-0">INITIALIZING...</div>
+        <div id="last-check" style="color: #6e7681; font-size: 0.8rem;">Ready for uplink</div>
+    </div>
+
+    <div class="console" id="console-log">
+        <div class="log-entry"><span class="log-time">[00:00:00]</span> <span class="log-msg">System initialized. Awaiting User ID...</span></div>
+    </div>
 </div>
 
 <script>
 let currentUserId = document.getElementById("userIdInput").value;
 let lastStatus = null;
-let intervalRef = null;
+let checkInterval = null;
 
-const statusMap = {
-    0: { text: "Offline", class: "Offline" },
-    1: { text: "Online", class: "Online" },
-    2: { text: "In a Game", class: "InGame" },
-    3: { text: "In Roblox Studio", class: "Studio" }
+const statusStrings = {
+    0: "OFFLINE",
+    1: "ONLINE",
+    2: "IN GAME",
+    3: "IN STUDIO"
 };
+
+function addLog(message, type = "info") {
+    const logContainer = document.getElementById("console-log");
+    const time = new Date().toLocaleTimeString('en-GB', { hour12: false });
+    const entry = document.createElement("div");
+    entry.className = "log-entry";
+    
+    let color = "#d1d5da";
+    if (type === "status") color = "#58a6ff";
+    if (type === "error") color = "#f85149";
+
+    entry.innerHTML = `<span class="log-time">[${time}]</span> <span class="log-msg" style="color: ${color}">${message}</span>`;
+    logContainer.prepend(entry);
+}
 
 async function checkPresence() {
     if (!currentUserId) return;
 
-    // We use a CORS proxy to bypass Roblox's browser restrictions
-    const proxyUrl = "https://corsproxy.io/?";
-    const apiUrl = "https://presence.roblox.com/v1/presence/users";
+    // We use a different proxy endpoint structure to help with GitHub Pages CORS
+    const proxy = "https://corsproxy.io/?";
+    const target = `https://presence.roblox.com/v1/presence/users`;
 
     try {
-        const response = await fetch(proxyUrl + encodeURIComponent(apiUrl), {
+        const response = await fetch(proxy + encodeURIComponent(target), {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ userIds: [parseInt(currentUserId)] })
         });
 
-        if (!response.ok) throw new Error("API Limit or Proxy Error");
+        if (!response.ok) throw new Error(`HTTP_${response.status}`);
 
         const data = await response.json();
-        const presenceData = data.userPresences[0];
-        const statusType = presenceData.userPresenceType;
+        const presence = data.userPresences[0];
+        const statusType = presence.userPresenceType;
 
-        const statusDisplay = document.getElementById("status");
-        const info = statusMap[statusType] || { text: "Unknown", class: "" };
+        // Update UI
+        const display = document.getElementById("status-display");
+        display.innerText = statusStrings[statusType] || "UNKNOWN";
+        display.className = `status-${statusType}`;
+        
+        document.getElementById("last-check").innerText = `Last Heartbeat: ${new Date().toLocaleTimeString()}`;
 
-        statusDisplay.innerText = `Status: ${info.text}`;
-        statusDisplay.className = info.class;
-        
-        document.getElementById("lastUpdate").innerText = "Last checked: " + new Date().toLocaleTimeString();
-        
+        // Log changes
         if (statusType !== lastStatus) {
-            console.log(`Status changed for ${currentUserId}:`, info.text);
+            addLog(`STATUS_CHANGE: Detected ${statusStrings[statusType]}`, "status");
             lastStatus = statusType;
         }
 
     } catch (err) {
-        document.getElementById("status").innerText = "Error: Could not fetch data";
-        console.error("Fetch error:", err);
+        addLog(`ERROR: Connection failed (${err.message})`, "error");
     }
 }
 
@@ -84,16 +192,17 @@ function updateTarget() {
     if (input) {
         currentUserId = input;
         lastStatus = null;
-        document.getElementById("status").innerText = "Fetching...";
+        document.getElementById("console-log").innerHTML = ""; // Clear log
+        addLog(`TARGET_ACQUIRED: Tracking ID ${currentUserId}`);
         checkPresence();
     }
 }
 
-// Check every 15 seconds (Roblox has strict rate limits)
-if (intervalRef) clearInterval(intervalRef);
-intervalRef = setInterval(checkPresence, 15000);
+// Set interval to 20 seconds to avoid being flagged by proxies
+if (checkInterval) clearInterval(checkInterval);
+checkInterval = setInterval(checkPresence, 20000);
 
-// Initial call
+// Initial check
 checkPresence();
 </script>
 
