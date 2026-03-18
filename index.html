@@ -1,1 +1,150 @@
-67
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presence Tracker</title>
+    <style>
+        :root {
+            --bg: #0d1117;
+            --card: #161b22;
+            --text: #c9d1d9;
+            --accent: #58a6ff;
+            --success: #238636;
+            --offline: #8b949e;
+            --ingame: #bc8cff;
+            --studio: #f2cc60;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            margin: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input {
+            flex: 1;
+            background: var(--card);
+            border: 1px solid #30363d;
+            padding: 12px;
+            color: white;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        button {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #console {
+            background: #000;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 15px;
+            height: 350px;
+            overflow-y: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .log-entry { margin-bottom: 4px; border-bottom: 1px solid #161b22; padding-bottom: 2px; }
+        .log-time { color: #8b949e; margin-right: 8px; }
+        .log-info { color: var(--accent); }
+        .log-status-0 { color: var(--offline); }
+        .log-status-1 { color: var(--success); font-weight: bold; }
+        .log-status-2 { color: var(--ingame); font-weight: bold; }
+        .log-status-3 { color: var(--studio); font-weight: bold; }
+        .log-error { color: #f85149; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2 style="color: white; margin-bottom: 5px;">User Presence Console</h2>
+        <p style="color: #8b949e; margin-bottom: 25px;">Monitoring Roblox Status via User ID</p>
+
+        <div class="input-group">
+            <input type="text" id="userId" placeholder="Target User ID...">
+            <button onclick="startTracking()">INITIATE</button>
+        </div>
+
+        <div id="console">
+            <div class="log-entry"><span class="log-info">[SYSTEM]</span> Console initialized. Waiting for input.</div>
+        </div>
+    </div>
+
+    <script>
+        const consoleEl = document.getElementById('console');
+        let intervalId = null;
+
+        function addLog(message, typeClass = '') {
+            const now = new Date().toLocaleTimeString();
+            const div = document.createElement('div');
+            div.className = 'log-entry';
+            div.innerHTML = `<span class="log-time">[${now}]</span> <span class="${typeClass}">${message}</span>`;
+            consoleEl.appendChild(div);
+            consoleEl.scrollTop = consoleEl.scrollHeight;
+        }
+
+        async function checkPresence(id) {
+            const proxy = "https://api.allorigins.win/raw?url=";
+            const url = `https://presence.roblox.com/v1/presence/users`;
+
+            try {
+                const response = await fetch(proxy + encodeURIComponent(url), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userIds: [parseInt(id)] })
+                });
+
+                const data = await response.json();
+                const presence = data.userPresences[0];
+
+                const statusMap = { 0: "OFFLINE", 1: "ONLINE", 2: "IN GAME", 3: "IN STUDIO" };
+                const statusText = statusMap[presence.userPresenceType] || "UNKNOWN";
+                const location = presence.lastLocation ? ` (@ ${presence.lastLocation})` : "";
+                
+                addLog(`RESULT: ${statusText}${location}`, `log-status-${presence.userPresenceType}`);
+            } catch (err) {
+                addLog(`ERR: Fetch failed. Check ID or connection.`, 'log-error');
+            }
+        }
+
+        function startTracking() {
+            const id = document.getElementById('userId').value;
+            if (!id) return;
+
+            if (intervalId) clearInterval(intervalId);
+            
+            consoleEl.innerHTML = '';
+            addLog(`STARTING TRACKER: ID ${id}`, 'log-info');
+            
+            checkPresence(id);
+            intervalId = setInterval(() => checkPresence(id), 20000);
+        }
+    </script>
+</body>
+</html>
