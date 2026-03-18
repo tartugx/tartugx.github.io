@@ -110,32 +110,45 @@
         }
 
         async function checkPresence(id) {
-            const proxy = "https://api.allorigins.win/raw?url=";
             const url = `https://presence.roblox.com/v1/presence/users`;
+            const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
 
             try {
-                const response = await fetch(proxy + encodeURIComponent(url), {
+                const response = await fetch(proxyUrl, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify({ userIds: [parseInt(id)] })
                 });
 
-                const data = await response.json();
-                const presence = data.userPresences[0];
+                if (!response.ok) throw new Error('Network response was not ok');
 
+                const data = await response.json();
+                
+                if (!data.userPresences || data.userPresences.length === 0) {
+                    addLog("ERR: User not found.", "log-error");
+                    return;
+                }
+
+                const presence = data.userPresences[0];
                 const statusMap = { 0: "OFFLINE", 1: "ONLINE", 2: "IN GAME", 3: "IN STUDIO" };
                 const statusText = statusMap[presence.userPresenceType] || "UNKNOWN";
                 const location = presence.lastLocation ? ` (@ ${presence.lastLocation})` : "";
                 
                 addLog(`RESULT: ${statusText}${location}`, `log-status-${presence.userPresenceType}`);
             } catch (err) {
-                addLog(`ERR: Fetch failed. Check ID or connection.`, 'log-error');
+                addLog(`ERR: Fetch failed. Proxy might be down or ID is invalid.`, 'log-error');
             }
         }
 
         function startTracking() {
             const id = document.getElementById('userId').value;
-            if (!id) return;
+            if (!id || isNaN(id)) {
+                addLog("ERR: Invalid User ID.", "log-error");
+                return;
+            }
 
             if (intervalId) clearInterval(intervalId);
             
@@ -143,7 +156,7 @@
             addLog(`STARTING TRACKER: ID ${id}`, 'log-info');
             
             checkPresence(id);
-            intervalId = setInterval(() => checkPresence(id), 20000);
+            intervalId = setInterval(() => checkPresence(id), 15000);
         }
     </script>
 </body>
