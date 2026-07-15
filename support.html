@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Support — tartugAI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,450;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14213D;
+    --bg:#F7F6F2;
+    --bg-alt:#EFEEE8;
+    --sage:#5B7B6B;
+    --gold:#C9A227;
+    --gray:#6B6B68;
+    --line:rgba(20,33,61,0.12);
+    --radius:2px;
+    --max:1160px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
+  }
+
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  h1,h2,h3{
+    font-family:'Fraunces', serif;
+    font-weight:450;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+
+  .label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    color:var(--sage);
+    font-weight:500;
+  }
+
+  a{color:inherit;}
+  img{max-width:100%; display:block;}
+
+  .wrap{
+    max-width:var(--max);
+    margin:0 auto;
+    padding:0 32px;
+  }
+
+  /* ---------- Nav ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(247,246,242,0.88);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:20px 32px;
+    max-width:var(--max);
+    margin:0 auto;
+  }
+  .logo{
+    font-family:'Fraunces', serif;
+    font-size:20px;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    text-decoration:none;
+  }
+  .logo-mark{
+    width:10px; height:10px;
+    background:var(--gold);
+    border-radius:50%;
+  }
+  .nav-links{
+    display:flex;
+    gap:36px;
+    list-style:none;
+    margin:0; padding:0;
+    font-size:14px;
+  }
+  .nav-links a{
+    text-decoration:none;
+    color:var(--ink);
+    opacity:0.75;
+    transition:opacity 0.2s;
+  }
+  .nav-links a:hover, .nav-links a:focus-visible{opacity:1;}
+  .nav-cta{
+    font-size:14px;
+    font-weight:500;
+    text-decoration:none;
+    padding:10px 20px;
+    background:var(--ink);
+    color:var(--bg);
+    border-radius:var(--radius);
+    transition:transform 0.2s ease, background 0.2s ease;
+  }
+  .nav-cta:hover{background:var(--sage);}
+  .menu-btn{display:none; background:none; border:none; cursor:pointer; padding:8px;}
+  .menu-btn span{display:block; width:22px; height:2px; background:var(--ink); margin:5px 0;}
+
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible{
+    outline:2px solid var(--gold);
+    outline-offset:3px;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    padding:120px 32px 80px;
+    max-width:var(--max);
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:1.2fr 0.8fr;
+    gap:64px;
+    align-items:end;
+  }
+  .hero-eyebrow{margin-bottom:22px;}
+  .hero h1{
+    font-size:clamp(40px, 6vw, 68px);
+    line-height:1.05;
+  }
+  .hero h1 em{
+    font-style:italic;
+    color:var(--sage);
+    position:relative;
+  }
+  .hero-sub{
+    margin-top:28px;
+    font-size:18px;
+    color:var(--gray);
+    max-width:46ch;
+  }
+  .hero-side{
+    border-left:1px solid var(--line);
+    padding-left:32px;
+  }
+  .hero-side p{
+    font-size:15px;
+    color:var(--gray);
+    margin:0 0 20px;
+  }
+  .grow-rule{
+    width:0%;
+    height:1px;
+    background:var(--gold);
+    transition:width 1.4s cubic-bezier(.2,.7,.2,1);
+    margin-bottom:20px;
+  }
+  .grow-rule.in-view{width:100%;}
+
+  /* ---------- Section shared ---------- */
+  section{padding:100px 0;}
+  .section-head{
+    max-width:640px;
+    margin-bottom:56px;
+  }
+  .section-head .label{margin-bottom:16px; display:block;}
+  .section-head h2{
+    font-size:clamp(30px, 4vw, 42px);
+    line-height:1.15;
+  }
+  .section-head p{
+    margin-top:18px;
+    color:var(--gray);
+    font-size:17px;
+  }
+
+  .reveal{
+    opacity:0;
+    transform:translateY(18px);
+    transition:opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.in-view{opacity:1; transform:translateY(0);}
+
+  /* ---------- Support Categories / Features-like Grid ---------- */
+  .features-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+  }
+  .feature{
+    background:var(--bg);
+    padding:40px 36px;
+  }
+  .feature .label{margin-bottom:24px;}
+  .feature h3{font-size:22px; margin-bottom:14px; font-weight:450;}
+  .feature p{color:var(--gray); font-size:15px; margin:0 0 20px;}
+  .feature-link{
+    font-size:14px;
+    font-weight:500;
+    text-decoration:none;
+    color:var(--ink);
+    border-bottom:1px solid var(--ink);
+    padding-bottom:1px;
+    transition:color 0.2s, border-color 0.2s;
+  }
+  .feature-link:hover{
+    color:var(--sage);
+    border-color:var(--sage);
+  }
+
+  /* ---------- Support Form Block ---------- */
+  .form-section{
+    background:var(--bg-alt);
+    border-radius:var(--radius);
+    padding:72px;
+  }
+  .form-container {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .form-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:24px;
+    margin-top:36px;
+  }
+  .form-col-full{
+    grid-column: span 2;
+  }
+  .form-group{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .form-group label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--sage);
+    font-weight:500;
+  }
+  .form-group input, .form-group textarea, .form-group select{
+    background:var(--bg);
+    border:1px solid var(--line);
+    padding:14px;
+    font-family:'Inter', sans-serif;
+    font-size:15px;
+    color:var(--ink);
+    border-radius:var(--radius);
+    width:100%;
+    transition:border-color 0.2s, background 0.2s;
+  }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus{
+    outline:none;
+    border-color:var(--ink);
+    background:var(--bg);
+  }
+  .form-group textarea{
+    resize:vertical;
+    min-height:120px;
+  }
+  .form-actions{
+    margin-top:32px;
+    display:flex;
+    justify-content:flex-end;
+  }
+  .btn-submit{
+    font-size:15px;
+    font-weight:500;
+    text-decoration:none;
+    padding:15px 36px;
+    background:var(--ink);
+    color:var(--bg);
+    border:none;
+    border-radius:var(--radius);
+    cursor:pointer;
+    transition:background 0.2s ease, transform 0.2s ease;
+  }
+  .btn-submit:hover{
+    background:var(--sage);
+    transform:translateY(-1px);
+  }
+
+  /* ---------- FAQ ---------- */
+  .faq{max-width:760px;}
+  .faq-item{
+    border-top:1px solid var(--line);
+    padding:24px 0;
+  }
+  .faq-item:last-child{border-bottom:1px solid var(--line);}
+  .faq-item summary{
+    cursor:pointer;
+    font-family:'Fraunces', serif;
+    font-size:18px;
+    list-style:none;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .faq-item summary::-webkit-details-marker{display:none;}
+  .faq-item summary::after{
+    content:"+";
+    font-family:'Inter', sans-serif;
+    font-size:20px;
+    color:var(--sage);
+    transition:transform 0.2s;
+  }
+  .faq-item[open] summary::after{transform:rotate(45deg);}
+  .faq-item p{color:var(--gray); font-size:15px; margin:14px 0 0;}
+
+  /* ---------- Footer ---------- */
+  footer{
+    border-top:1px solid var(--line);
+    padding:56px 0 40px;
+  }
+  .footer-top{
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:40px;
+    padding-bottom:40px;
+  }
+  .footer-cols{
+    display:flex;
+    gap:64px;
+    flex-wrap:wrap;
+  }
+  .footer-col .label{margin-bottom:16px; display:block;}
+  .footer-col ul{list-style:none; padding:0; margin:0;}
+  .footer-col li{margin-bottom:10px;}
+  .footer-col a{text-decoration:none; color:var(--gray); font-size:14px; transition:color 0.2s;}
+  .footer-col a:hover{color:var(--ink);}
+  .footer-bottom{
+    border-top:1px solid var(--line);
+    padding-top:24px;
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+    font-size:13px;
+    color:var(--gray);
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:860px){
+    .nav-links{display:none;}
+    .menu-btn{display:block;}
+    .hero{grid-template-columns:1fr; gap:40px; padding-top:64px;}
+    .hero-side{border-left:none; border-top:1px solid var(--line); padding-left:0; padding-top:28px;}
+    .features-grid{grid-template-columns:1fr;}
+    .form-grid{grid-template-columns: 1fr;}
+    .form-col-full{grid-column: span 1;}
+    .form-section{padding:48px 24px;}
+    section{padding:64px 0;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <a href="#" class="logo"><span class="logo-mark"></span>tartugAI</a>
+    <ul class="nav-links">
+      <li><a href="#topics">Topics</a></li>
+      <li><a href="#ticket">Submit Ticket</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#">Return Home</a></li>
+    </ul>
+    <a href="#" class="nav-cta">Start free trial</a>
+    <button class="menu-btn" aria-label="Menu"><span></span><span></span><span></span></button>
+  </nav>
+</header>
+
+<section class="hero">
+  <div>
+    <span class="label hero-eyebrow">tartugAI Support</span>
+    <h1>We’re here to <em>help</em>.</h1>
+    <p class="hero-sub">Get assistance from our dedicated team. Our Martian support relays are usually active 24/7.</p>
+  </div>
+  <div class="hero-side reveal">
+    <div class="grow-rule"></div>
+    <p>Average response time: 67 seconds. Built to keep your workflows on track, no matter what orbit you're in.</p>
+    <span class="label">Status: All systems operational</span>
+  </div>
+</section>
+
+<section id="topics" style="border-top: 1px solid var(--line);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="label">Knowledge Base</span>
+      <h2>Browse help categories</h2>
+      <p>Quick answers to common questions about tartugAI platforms, accounts, and planet-to-planet integrations.</p>
+    </div>
+    
+    <div class="features-grid reveal">
+      <div class="feature">
+        <span class="label">01 / Setup</span>
+        <h3>Getting Started</h3>
+        <p>Learn how to connect your projects, import sheets, and trigger your first set of Martian AI replies.</p>
+        <a href="#" class="feature-link">Read Guide</a>
+      </div>
+      <div class="feature">
+        <span class="label">02 / Ledger</span>
+        <h3>Billing & Plans</h3>
+        <p>Details about the Starter plan, the Growth tier ($67/yr), or how to transition to the Good Boy tier.</p>
+        <a href="#" class="feature-link">View Pricing FAQ</a>
+      </div>
+      <div class="feature">
+        <span class="label">03 / Core</span>
+        <h3>API & Integrations</h3>
+        <p>Integrate the lightweight, zero-bloat tartugAI script directly into your native workflows with code examples.</p>
+        <a href="#" class="feature-link">API Docs</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="ticket">
+  <div class="wrap">
+    <div class="form-section reveal">
+      <div class="form-container">
+        <span class="label" style="color:var(--gold); margin-bottom:12px; display:block;">Direct Line</span>
+        <h2 style="font-size:32px; margin-bottom:12px;">Open a support ticket</h2>
+        <p style="color:var(--gray); margin-bottom:32px;">Can't find what you need? Send a message directly to our human (and Martian) operators. We will respond promptly.</p>
+        
+        <form class="form" onsubmit="event.preventDefault(); alert('Ticket transmitted to the Kingdom of Tartugaland relay!');">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="name">Your Name</label>
+              <input type="text" id="name" required placeholder="Lionel Pessi">
+            </div>
+            <div class="form-group">
+              <label for="email">Martian / Earth Email</label>
+              <input type="email" id="email" required placeholder="pessi@penaltylabs.com">
+            </div>
+            <div class="form-group form-col-full">
+              <label for="topic">What do you need help with?</label>
+              <select id="topic" required>
+                <option value="" disabled selected>Select an issue category</option>
+                <option value="billing">Billing or Tier Upgrades ($67/yr issues)</option>
+                <option value="technical">Technical Glitches / AI water usage</option>
+                <option value="good-boy">Glazing Requests (Good boy plan)</option>
+                <option value="other">General Larping Inquiries</option>
+              </select>
+            </div>
+            <div class="form-group form-col-full">
+              <label for="message">Your Message</label>
+              <textarea id="message" required placeholder="Briefly describe what went wrong..."></textarea>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn-submit">Transmit Ticket</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq" style="border-top:1px solid var(--line);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="label">Common Queries</span>
+      <h2>Frequently Asked Questions</h2>
+    </div>
+    
+    <div class="faq reveal">
+      <details class="faq-item">
+        <summary>Why is tartugAI connected to Mars?</summary>
+        <p>Because the Kingdom of Tartugaland is currently headquartered in the southern plains of Mars. This guarantees that our network is unaffected by minor Earth anomalies, though it occasionally introduces a light orbital transit delay.</p>
+      </details>
+      <details class="faq-item">
+        <summary>How do I upgrade to the Good Boy plan?</summary>
+        <p>You can upgrade via your dashboard. The Good Boy plan is highly specialized at $670/yr for individuals who prefer all-day positive reinforcement ("glazing") instead of our highly direct, harsh realities.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Does tartugAI really consume less water?</summary>
+        <p>Yes. Due to Martian design standards, our logical operations utilize an arid computing architecture, making it the most resource-efficient choice in the known star system.</p>
+      </details>
+      <details class="faq-item">
+        <summary>What is your refund policy?</summary>
+        <p>If you are unsatisfied with your AI replies, you can request a full refund within 67 days of purchase. No seat-count tricks, no stressful paperwork.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="logo"><span class="logo-mark"></span>tartugAI</div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <span class="label">Product</span>
+          <ul>
+            <li><a href="#">Features</a></li>
+            <li><a href="#">Pricing</a></li>
+            <li><a href="#">Changelog</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <span class="label">Company</span>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <span class="label">Legal</span>
+          <ul>
+            <li><a href="#">Privacy</a></li>
+            <li><a href="#">Terms</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 tartugAI, Inc.</span>
+      <span>Made for larpers by The Kingdom of Tartugaland.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const growEls = document.querySelectorAll('.grow-rule');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('in-view');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+  growEls.forEach(el => io.observe(el));
+
+  // Mobile menu (simple toggle demo)
+  const menuBtn = document.querySelector('.menu-btn');
+  const navLinks = document.querySelector('.nav-links');
+  menuBtn.addEventListener('click', () => {
+    const isOpen = navLinks.style.display === 'flex';
+    navLinks.style.display = isOpen ? 'none' : 'flex';
+    navLinks.style.flexDirection = 'column';
+    navLinks.style.position = 'absolute';
+    navLinks.style.top = '64px';
+    navLinks.style.left = '0';
+    navLinks.style.right = '0';
+    navLinks.style.background = '#F7F6F2';
+    navLinks.style.padding = '24px 32px';
+    navLinks.style.borderBottom = '1px solid rgba(20,33,61,0.12)';
+  });
+</script>
+
+</body>
+</html>
