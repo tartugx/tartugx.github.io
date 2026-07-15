@@ -1,12 +1,663 @@
 <!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>tartugAI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,450;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14213D;
+    --bg:#F7F6F2;
+    --bg-alt:#EFEEE8;
+    --sage:#5B7B6B;
+    --gold:#C9A227;
+    --gray:#6B6B68;
+    --line:rgba(20,33,61,0.12);
+    --radius:2px;
+    --max:1160px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
+  }
+
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  h1,h2,h3{
+    font-family:'Fraunces', serif;
+    font-weight:450;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+
+  .label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    color:var(--sage);
+    font-weight:500;
+  }
+
+  a{color:inherit;}
+  img{max-width:100%; display:block;}
+
+  .wrap{
+    max-width:var(--max);
+    margin:0 auto;
+    padding:0 32px;
+  }
+
+  /* ---------- Nav ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(247,246,242,0.88);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:20px 32px;
+    max-width:var(--max);
+    margin:0 auto;
+  }
+  .logo{
+    font-family:'Fraunces', serif;
+    font-size:20px;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .logo-mark{
+    width:10px; height:10px;
+    background:var(--gold);
+    border-radius:50%;
+  }
+  .nav-links{
+    display:flex;
+    gap:36px;
+    list-style:none;
+    margin:0; padding:0;
+    font-size:14px;
+  }
+  .nav-links a{
+    text-decoration:none;
+    color:var(--ink);
+    opacity:0.75;
+    transition:opacity 0.2s;
+  }
+  .nav-links a:hover, .nav-links a:focus-visible{opacity:1;}
+  .nav-cta{
+    font-size:14px;
+    font-weight:500;
+    text-decoration:none;
+    padding:10px 20px;
+    background:var(--ink);
+    color:var(--bg);
+    border-radius:var(--radius);
+    transition:transform 0.2s ease, background 0.2s ease;
+  }
+  .nav-cta:hover{background:var(--sage);}
+  .menu-btn{display:none; background:none; border:none; cursor:pointer; padding:8px;}
+  .menu-btn span{display:block; width:22px; height:2px; background:var(--ink); margin:5px 0;}
+
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--gold);
+    outline-offset:3px;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    padding:120px 32px 100px;
+    max-width:var(--max);
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:1.2fr 0.8fr;
+    gap:64px;
+    align-items:end;
+  }
+  .hero-eyebrow{margin-bottom:22px;}
+  .hero h1{
+    font-size:clamp(40px, 6vw, 68px);
+    line-height:1.05;
+  }
+  .hero h1 em{
+    font-style:italic;
+    color:var(--sage);
+    position:relative;
+  }
+  .hero-sub{
+    margin-top:28px;
+    font-size:18px;
+    color:var(--gray);
+    max-width:46ch;
+  }
+  .hero-actions{
+    margin-top:40px;
+    display:flex;
+    gap:16px;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+  .btn-primary{
+    font-size:15px;
+    font-weight:500;
+    text-decoration:none;
+    padding:15px 28px;
+    background:var(--ink);
+    color:var(--bg);
+    border-radius:var(--radius);
+    display:inline-block;
+    transition:background 0.2s ease, transform 0.2s ease;
+  }
+  .btn-primary:hover{background:var(--sage); transform:translateY(-1px);}
+  .btn-ghost{
+    font-size:15px;
+    font-weight:500;
+    text-decoration:none;
+    color:var(--ink);
+    border-bottom:1px solid var(--ink);
+    padding-bottom:2px;
+  }
+  .hero-side{
+    border-left:1px solid var(--line);
+    padding-left:32px;
+  }
+  .hero-side p{
+    font-size:15px;
+    color:var(--gray);
+    margin:0 0 20px;
+  }
+  .grow-rule{
+    width:0%;
+    height:1px;
+    background:var(--gold);
+    transition:width 1.4s cubic-bezier(.2,.7,.2,1);
+    margin-bottom:20px;
+  }
+  .grow-rule.in-view{width:100%;}
+
+  /* ---------- Logos strip ---------- */
+  .logos{
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    padding:28px 32px;
+  }
+  .logos .wrap{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:20px;
+  }
+  .logos span{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    color:var(--gray);
+    opacity:0.6;
+    letter-spacing:0.04em;
+  }
+
+  /* ---------- Section shared ---------- */
+  section{padding:100px 0;}
+  .section-head{
+    max-width:640px;
+    margin-bottom:56px;
+  }
+  .section-head .label{margin-bottom:16px; display:block;}
+  .section-head h2{
+    font-size:clamp(30px, 4vw, 42px);
+    line-height:1.15;
+  }
+  .section-head p{
+    margin-top:18px;
+    color:var(--gray);
+    font-size:17px;
+  }
+
+  .reveal{
+    opacity:0;
+    transform:translateY(18px);
+    transition:opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.in-view{opacity:1; transform:translateY(0);}
+
+  /* ---------- Features ---------- */
+  .features-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+  }
+  .feature{
+    background:var(--bg);
+    padding:40px 36px;
+  }
+  .feature .label{margin-bottom:24px;}
+  .feature h3{font-size:22px; margin-bottom:14px; font-weight:450;}
+  .feature p{color:var(--gray); font-size:15px; margin:0;}
+
+  /* ---------- Showcase / signature element ---------- */
+  .showcase{
+    background:var(--ink);
+    color:var(--bg);
+    border-radius:var(--radius);
+    padding:64px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:56px;
+    align-items:center;
+  }
+  .showcase .label{color:var(--gold);}
+  .showcase h2{color:var(--bg); font-size:32px; margin-top:16px;}
+  .showcase p{color:rgba(247,246,242,0.72); margin-top:16px; font-size:16px;}
+  .showcase-panel{
+    background:rgba(247,246,242,0.06);
+    border:1px solid rgba(247,246,242,0.16);
+    border-radius:var(--radius);
+    padding:28px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+  }
+  .showcase-row{
+    display:flex;
+    justify-content:space-between;
+    padding:12px 0;
+    border-bottom:1px solid rgba(247,246,242,0.12);
+    color:rgba(247,246,242,0.85);
+  }
+  .showcase-row:last-child{border-bottom:none;}
+  .showcase-row .ok{color:var(--gold);}
+
+  /* ---------- Testimonial ---------- */
+  .testimonial{
+    text-align:left;
+    max-width:760px;
+  }
+  .testimonial blockquote{
+    font-family:'Fraunces', serif;
+    font-size:clamp(24px, 3vw, 32px);
+    font-weight:450;
+    line-height:1.4;
+    margin:0;
+    font-style:italic;
+  }
+  .testimonial cite{
+    display:block;
+    margin-top:28px;
+    font-style:normal;
+    font-size:14px;
+    color:var(--gray);
+  }
+
+  /* ---------- Pricing ---------- */
+  .pricing-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:24px;
+  }
+  .plan{
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:36px 32px;
+    background:var(--bg);
+    display:flex;
+    flex-direction:column;
+  }
+  .plan.featured{
+    background:var(--ink);
+    color:var(--bg);
+    border-color:var(--ink);
+  }
+  .plan.featured .plan-desc{color:rgba(247,246,242,0.7);}
+  .plan.featured .plan-features li{color:rgba(247,246,242,0.85);}
+  .plan.featured .plan-features li::before{color:var(--gold);}
+  .plan-index{font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--sage); letter-spacing:0.1em;}
+  .plan.featured .plan-index{color:var(--gold);}
+  .plan-name{font-size:22px; margin-top:14px; font-family:'Fraunces', serif;}
+  .plan-price{font-size:40px; margin-top:18px; font-family:'Fraunces', serif;}
+  .plan-price span{font-size:15px; font-family:'Inter', sans-serif; color:var(--gray); font-weight:400;}
+  .plan.featured .plan-price span{color:rgba(247,246,242,0.6);}
+  .plan-desc{font-size:14px; color:var(--gray); margin-top:10px;}
+  .plan-features{list-style:none; padding:0; margin:28px 0 32px; flex-grow:1;}
+  .plan-features li{
+    font-size:14px;
+    padding:9px 0;
+    border-top:1px solid var(--line);
+    color:var(--ink);
+  }
+  .plan.featured .plan-features li{border-top:1px solid rgba(247,246,242,0.14);}
+  .plan-features li:first-child{border-top:none;}
+  .plan-features li::before{content:"— "; color:var(--sage);}
+  .plan-btn{
+    text-align:center;
+    padding:13px;
+    border-radius:var(--radius);
+    text-decoration:none;
+    font-size:14px;
+    font-weight:500;
+    border:1px solid var(--ink);
+    color:var(--ink);
+    transition:background 0.2s, color 0.2s;
+  }
+  .plan-btn:hover{background:var(--ink); color:var(--bg);}
+  .plan.featured .plan-btn{
+    border:1px solid var(--gold);
+    color:var(--ink);
+    background:var(--gold);
+  }
+  .plan.featured .plan-btn:hover{background:transparent; color:var(--bg);}
+
+  /* ---------- FAQ ---------- */
+  .faq{max-width:760px;}
+  .faq-item{
+    border-top:1px solid var(--line);
+    padding:24px 0;
+  }
+  .faq-item:last-child{border-bottom:1px solid var(--line);}
+  .faq-item summary{
+    cursor:pointer;
+    font-family:'Fraunces', serif;
+    font-size:18px;
+    list-style:none;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .faq-item summary::-webkit-details-marker{display:none;}
+  .faq-item summary::after{
+    content:"+";
+    font-family:'Inter', sans-serif;
+    font-size:20px;
+    color:var(--sage);
+    transition:transform 0.2s;
+  }
+  .faq-item[open] summary::after{transform:rotate(45deg);}
+  .faq-item p{color:var(--gray); font-size:15px; margin:14px 0 0;}
+
+  /* ---------- CTA band ---------- */
+  .cta-band{
+    background:var(--bg-alt);
+    border-radius:var(--radius);
+    padding:72px;
+    text-align:center;
+  }
+  .cta-band h2{font-size:clamp(28px, 4vw, 40px); max-width:600px; margin:0 auto;}
+  .cta-band p{color:var(--gray); margin-top:16px;}
+  .cta-band .hero-actions{justify-content:center; margin-top:32px;}
+
+  /* ---------- Footer ---------- */
+  footer{
+    border-top:1px solid var(--line);
+    padding:56px 0 40px;
+  }
+  .footer-top{
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:40px;
+    padding-bottom:40px;
+  }
+  .footer-cols{
+    display:flex;
+    gap:64px;
+    flex-wrap:wrap;
+  }
+  .footer-col .label{margin-bottom:16px; display:block;}
+  .footer-col ul{list-style:none; padding:0; margin:0;}
+  .footer-col li{margin-bottom:10px;}
+  .footer-col a{text-decoration:none; color:var(--gray); font-size:14px; transition:color 0.2s;}
+  .footer-col a:hover{color:var(--ink);}
+  .footer-bottom{
+    border-top:1px solid var(--line);
+    padding-top:24px;
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+    font-size:13px;
+    color:var(--gray);
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:860px){
+    .nav-links{display:none;}
+    .menu-btn{display:block;}
+    .hero{grid-template-columns:1fr; gap:40px; padding-top:64px;}
+    .hero-side{border-left:none; border-top:1px solid var(--line); padding-left:0; padding-top:28px;}
+    .features-grid{grid-template-columns:1fr;}
+    .showcase{grid-template-columns:1fr; padding:40px 28px;}
+    .pricing-grid{grid-template-columns:1fr;}
+    .cta-band{padding:48px 28px;}
+    section{padding:64px 0;}
+  }
+</style>
 </head>
 <body>
-	<h1>tartugAI</h1>
-	<h3>Powered by the Kingdom of Tartugaland</h3>
+
+<header>
+  <nav>
+    <div class="logo"><span class="logo-mark"></span>tartugAI</div>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#showcase">Upgrade</a></li>
+      <li><a href="#support">Support</a></li>
+      <li><a href="#appeal">Appeal</a></li>
+    </ul>
+    <a href="#" class="nav-cta">Start free trial</a>
+    <button class="menu-btn" aria-label="Menu"><span></span><span></span><span></span></button>
+  </nav>
+</header>
+
+<section class="hero">
+  <div>
+    <span class="label hero-eyebrow">tartugAI</span>
+    <h1>Really<br>cool <em>AI</em>.</h1>
+    <p class="hero-sub">tartugAI is a really cool AI powered by the Kingdom of Tartugaland</p>
+    <div class="hero-actions">
+      <a href="#" class="btn-primary">Start free trial</a>
+      <a href="#showcase" class="btn-ghost">See how it works</a>
+    </div>
+  </div>
+  <div class="hero-side reveal">
+    <div class="grow-rule"></div>
+    <p>Built for small teams who've outgrown spreadsheets but don't want another bloated tool to manage.</p>
+    <span class="label">No credit card required</span>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="label">Why is tartugAI better than a regular AI</span>
+      <h2>Only one way to explain it.</h2>
+      <p>tartugAI is a AI powered by the most prestigious country on mars: Kingdom of Tartugaland.</p>
+    </div>
+    <div class="features-grid reveal">
+      <div class="feature">
+        <span class="label">Clarity</span>
+        <h3>One source of truth</h3>
+        <p>The Kingdom of Tartugaland is the richest and wealthiest country on Mars"</p>
+      </div>
+      <div class="feature">
+        <span class="label">Speed</span>
+        <h3>Replies in Seconds</h3>
+        <p>tartugAI is the fastest working AI that consumes less water than any other AI.</p>
+      </div>
+      <div class="feature">
+        <span class="label">Focus</span>
+        <h3>Good replies</h3>
+        <p>tartugAI has good yet simple replies that make you keep your focus.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="showcase">
+  <div class="wrap">
+    <div class="showcase reveal">
+      <div>
+        <span class="label">Inside a project</span>
+        <h2>See the whole picture, not just your slice of it.</h2>
+        <p>67 is cool bro.</p>
+        <div class="hero-actions" style="margin-top:28px;">
+          <a href="#" class="btn-primary">See a live project</a>
+        </div>
+      </div>
+      <div class="showcase-panel">
+        <div class="showcase-row"><span>Homepage redesign</span><span class="ok">On track</span></div>
+        <div class="showcase-row"><span>API migration</span><span class="ok">On track</span></div>
+        <div class="showcase-row"><span>Q3 pricing update</span><span>Needs input</span></div>
+        <div class="showcase-row"><span>Onboarding rewrite</span><span class="ok">Shipped</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="testimonial reveal">
+      <blockquote>"We stopped using PlatnikAI as soon as we saw the capability of tartugAI, no other AI in the market can compare.  "</blockquote>
+      <cite>Lionel Pessi, Head of Penalty Labs</cite>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="label">Pricing</span>
+      <h2>Straightforward plans, no seat-count tricks.</h2>
+    </div>
+    <div class="pricing-grid reveal">
+      <div class="plan">
+        <span class="plan-index">01 — Starter</span>
+        <div class="plan-name">Starter</div>
+        <div class="plan-price">$0<span> yr</span></div>
+        <p class="plan-desc"> Just for personal everyday use.</p>
+        <ul class="plan-features">
+          <li>Limited Replies</li>
+          <li>Harsh Replies about Reality</li>
+          <li>No image generation</li>
+        </ul>
+        <a href="#" class="plan-btn">Get started</a>
+      </div>
+      <div class="plan featured">
+        <span class="plan-index">02 — Growth</span>
+        <div class="plan-name">Growth</div>
+        <div class="plan-price">$67<span> yr</span></div>
+        <p class="plan-desc">For more passionate people.</p>
+        <ul class="plan-features">
+          <li>Unlimited Replies</li>
+          <li>Harsh Replies about Reality</li>
+          <li>Image Generation</li>
+          <li>Priority support</li>
+        </ul>
+        <a href="#" class="plan-btn">Start free trial</a>
+      </div>
+      <div class="plan">
+        <span class="plan-index">03 — Good boy</span>
+        <div class="plan-name">Good boy</div>
+        <div class="plan-price">$670<span> yr</span></div>
+        <p class="plan-desc">For good boys who want to pay a lot.</p>
+        <ul class="plan-features">
+          <li>Unlimited Replies</li>
+          <li>No harsh and 100% Glazed all the time</li>
+          <li>Image Generation</li>
+          <li>Priority support</li>
+        </ul>
+        <a href="#" class="plan-btn">Talk to us</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="logo"><span class="logo-mark"></span>tartugAI</div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <span class="label">Product</span>
+          <ul>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#">Changelog</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <span class="label">Company</span>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <span class="label">Legal</span>
+          <ul>
+            <li><a href="#">Privacy</a></li>
+            <li><a href="#">Terms</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 tartugAI, Inc.</span>
+      <span>Made for larpers by The Kingdom of Tartugaland.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const growEls = document.querySelectorAll('.grow-rule');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('in-view');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+  growEls.forEach(el => io.observe(el));
+
+  // Mobile menu (simple toggle demo — expand as needed)
+  const menuBtn = document.querySelector('.menu-btn');
+  const navLinks = document.querySelector('.nav-links');
+  menuBtn.addEventListener('click', () => {
+    const isOpen = navLinks.style.display === 'flex';
+    navLinks.style.display = isOpen ? 'none' : 'flex';
+    navLinks.style.flexDirection = 'column';
+    navLinks.style.position = 'absolute';
+    navLinks.style.top = '64px';
+    navLinks.style.left = '0';
+    navLinks.style.right = '0';
+    navLinks.style.background = '#F7F6F2';
+    navLinks.style.padding = '24px 32px';
+    navLinks.style.borderBottom = '1px solid rgba(20,33,61,0.12)';
+  });
+</script>
+
 </body>
 </html>
