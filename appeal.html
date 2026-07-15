@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ban Appeal — tartugAI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,450;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14213D;
+    --bg:#F7F6F2;
+    --bg-alt:#EFEEE8;
+    --sage:#5B7B6B;
+    --gold:#C9A227;
+    --gray:#6B6B68;
+    --line:rgba(20,33,61,0.12);
+    --radius:2px;
+    --max:1160px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
+  }
+
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  h1,h2,h3{
+    font-family:'Fraunces', serif;
+    font-weight:450;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+
+  .label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    color:var(--sage);
+    font-weight:500;
+  }
+
+  a{color:inherit;}
+  img{max-width:100%; display:block;}
+
+  .wrap{
+    max-width:var(--max);
+    margin:0 auto;
+    padding:0 32px;
+  }
+
+  /* ---------- Nav ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(247,246,242,0.88);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:20px 32px;
+    max-width:var(--max);
+    margin:0 auto;
+  }
+  .logo{
+    font-family:'Fraunces', serif;
+    font-size:20px;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    text-decoration:none;
+  }
+  .logo-mark{
+    width:10px; height:10px;
+    background:var(--gold);
+    border-radius:50%;
+  }
+  .nav-links{
+    display:flex;
+    gap:36px;
+    list-style:none;
+    margin:0; padding:0;
+    font-size:14px;
+  }
+  .nav-links a{
+    text-decoration:none;
+    color:var(--ink);
+    opacity:0.75;
+    transition:opacity 0.2s;
+  }
+  .nav-links a:hover, .nav-links a:focus-visible{opacity:1;}
+  .nav-cta{
+    font-size:14px;
+    font-weight:500;
+    text-decoration:none;
+    padding:10px 20px;
+    background:var(--ink);
+    color:var(--bg);
+    border-radius:var(--radius);
+    transition:transform 0.2s ease, background 0.2s ease;
+  }
+  .nav-cta:hover{background:var(--sage);}
+  .menu-btn{display:none; background:none; border:none; cursor:pointer; padding:8px;}
+  .menu-btn span{display:block; width:22px; height:2px; background:var(--ink); margin:5px 0;}
+
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible{
+    outline:2px solid var(--gold);
+    outline-offset:3px;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    padding:120px 32px 80px;
+    max-width:var(--max);
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:1.2fr 0.8fr;
+    gap:64px;
+    align-items:end;
+  }
+  .hero-eyebrow{margin-bottom:22px;}
+  .hero h1{
+    font-size:clamp(40px, 6vw, 68px);
+    line-height:1.05;
+  }
+  .hero h1 em{
+    font-style:italic;
+    color:var(--sage);
+    position:relative;
+  }
+  .hero-sub{
+    margin-top:28px;
+    font-size:18px;
+    color:var(--gray);
+    max-width:46ch;
+  }
+  .hero-side{
+    border-left:1px solid var(--line);
+    padding-left:32px;
+  }
+  .hero-side p{
+    font-size:15px;
+    color:var(--gray);
+    margin:0 0 20px;
+  }
+  .grow-rule{
+    width:0%;
+    height:1px;
+    background:var(--gold);
+    transition:width 1.4s cubic-bezier(.2,.7,.2,1);
+    margin-bottom:20px;
+  }
+  .grow-rule.in-view{width:100%;}
+
+  /* ---------- Section shared ---------- */
+  section{padding:100px 0;}
+  .section-head{
+    max-width:640px;
+    margin-bottom:56px;
+  }
+  .section-head .label{margin-bottom:16px; display:block;}
+  .section-head h2{
+    font-size:clamp(30px, 4vw, 42px);
+    line-height:1.15;
+  }
+  .section-head p{
+    margin-top:18px;
+    color:var(--gray);
+    font-size:17px;
+  }
+
+  .reveal{
+    opacity:0;
+    transform:translateY(18px);
+    transition:opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.in-view{opacity:1; transform:translateY(0);}
+
+  /* ---------- Appeal Guidelines Grid ---------- */
+  .features-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+  }
+  .feature{
+    background:var(--bg);
+    padding:40px 36px;
+  }
+  .feature .label{margin-bottom:24px;}
+  .feature h3{font-size:22px; margin-bottom:14px; font-weight:450;}
+  .feature p{color:var(--gray); font-size:15px; margin:0;}
+
+  /* ---------- Appeal Form Block ---------- */
+  .form-section{
+    background:var(--bg-alt);
+    border-radius:var(--radius);
+    padding:72px;
+  }
+  .form-container {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .form-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:24px;
+    margin-top:36px;
+  }
+  .form-col-full{
+    grid-column: span 2;
+  }
+  .form-group{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .form-group label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--sage);
+    font-weight:500;
+  }
+  .form-group input, .form-group textarea, .form-group select{
+    background:var(--bg);
+    border:1px solid var(--line);
+    padding:14px;
+    font-family:'Inter', sans-serif;
+    font-size:15px;
+    color:var(--ink);
+    border-radius:var(--radius);
+    width:100%;
+    transition:border-color 0.2s, background 0.2s;
+  }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus{
+    outline:none;
+    border-color:var(--ink);
+    background:var(--bg);
+  }
+  .form-group textarea{
+    resize:vertical;
+    min-height:140px;
+  }
+  .form-actions{
+    margin-top:32px;
+    display:flex;
+    justify-content:flex-end;
+  }
+  .btn-submit{
+    font-size:15px;
+    font-weight:500;
+    text-decoration:none;
+    padding:15px 36px;
+    background:var(--ink);
+    color:var(--bg);
+    border:none;
+    border-radius:var(--radius);
+    cursor:pointer;
+    transition:background 0.2s ease, transform 0.2s ease;
+  }
+  .btn-submit:hover{
+    background:var(--sage);
+    transform:translateY(-1px);
+  }
+
+  /* ---------- FAQ ---------- */
+  .faq{max-width:760px;}
+  .faq-item{
+    border-top:1px solid var(--line);
+    padding:24px 0;
+  }
+  .faq-item:last-child{border-bottom:1px solid var(--line);}
+  .faq-item summary{
+    cursor:pointer;
+    font-family:'Fraunces', serif;
+    font-size:18px;
+    list-style:none;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .faq-item summary::-webkit-details-marker{display:none;}
+  .faq-item summary::after{
+    content:"+";
+    font-family:'Inter', sans-serif;
+    font-size:20px;
+    color:var(--sage);
+    transition:transform 0.2s;
+  }
+  .faq-item[open] summary::after{transform:rotate(45deg);}
+  .faq-item p{color:var(--gray); font-size:15px; margin:14px 0 0;}
+
+  /* ---------- Footer ---------- */
+  footer{
+    border-top:1px solid var(--line);
+    padding:56px 0 40px;
+  }
+  .footer-top{
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:40px;
+    padding-bottom:40px;
+  }
+  .footer-cols{
+    display:flex;
+    gap:64px;
+    flex-wrap:wrap;
+  }
+  .footer-col .label{margin-bottom:16px; display:block;}
+  .footer-col ul{list-style:none; padding:0; margin:0;}
+  .footer-col li{margin-bottom:10px;}
+  .footer-col a{text-decoration:none; color:var(--gray); font-size:14px; transition:color 0.2s;}
+  .footer-col a:hover{color:var(--ink);}
+  .footer-bottom{
+    border-top:1px solid var(--line);
+    padding-top:24px;
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+    font-size:13px;
+    color:var(--gray);
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:860px){
+    .nav-links{display:none;}
+    .menu-btn{display:block;}
+    .hero{grid-template-columns:1fr; gap:40px; padding-top:64px;}
+    .hero-side{border-left:none; border-top:1px solid var(--line); padding-left:0; padding-top:28px;}
+    .features-grid{grid-template-columns:1fr;}
+    .form-grid{grid-template-columns: 1fr;}
+    .form-col-full{grid-column: span 1;}
+    .form-section{padding:48px 24px;}
+    section{padding:64px 0;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <a href="#" class="logo"><span class="logo-mark"></span>tartugAI</a>
+    <ul class="nav-links">
+      <li><a href="#rules">Rules</a></li>
+      <li><a href="#appeal-form">Submit Appeal</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#">Return Home</a></li>
+    </ul>
+    <a href="#" class="nav-cta">Start free trial</a>
+    <button class="menu-btn" aria-label="Menu"><span></span><span></span><span></span></button>
+  </nav>
+</header>
+
+<section class="hero">
+  <div>
+    <span class="label hero-eyebrow">High Council Tribunal</span>
+    <h1>Pleade your <em>case</em>.</h1>
+    <p class="hero-sub">Did the harsh realities of our AI get you banned? Or did you accidentally abuse the Martian water-cooling relays? Let's sort it out.</p>
+  </div>
+  <div class="hero-side reveal">
+    <div class="grow-rule"></div>
+    <p>All appeals are strictly evaluated by royal decree. Make your case count, larpers.</p>
+    <span class="label">Bans processed this month: 67</span>
+  </div>
+</section>
+
+<section id="rules" style="border-top: 1px solid var(--line);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="label">The Code of Tartugaland</span>
+      <h2>Three rules for a successful appeal.</h2>
+      <p>Before submitting, please make sure your heart is ready to face the Martian judicial framework.</p>
+    </div>
+    
+    <div class="features-grid reveal">
+      <div class="feature">
+        <span class="label">Step 01</span>
+        <h3>Admit the larp</h3>
+        <p>If you were banned for excessive larping without a registered Martian passport, honesty is your best defense.</p>
+      </div>
+      <div class="feature">
+        <span class="label">Step 02</span>
+        <h3>Acknowledge the water</h3>
+        <p>Accept that tartugAI queries require critical coolant resources. Promising to use less water increases your chance of reinstatement by 88%.</p>
+      </div>
+      <div class="feature">
+        <span class="label">Step 03</span>
+        <h3>Choose your reality</h3>
+        <p>If the Starter plan's "Harsh Replies" broke you, state clearly if you need to be demoted to the "Good Boy" glazed-only zone.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="appeal-form">
+  <div class="wrap">
+    <div class="form-section reveal">
+      <div class="form-container">
+        <span class="label" style="color:var(--gold); margin-bottom:12px; display:block;">Plea Submission</span>
+        <h2 style="font-size:32px; margin-bottom:12px;">Appease the High Court</h2>
+        <p style="color:var(--gray); margin-bottom:32px;">Please fill out this form accurately. Falsifying your credentials will result in a permanent block from all planetary systems.</p>
+        
+        <form class="form" onsubmit="event.preventDefault(); alert('Your appeal has been beamed to the High Council of Tartugaland. Sit tight.');">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="username">Your Username</label>
+              <input type="text" id="username" required placeholder="pessi_larper_10">
+            </div>
+            <div class="form-group">
+              <label for="email">Account Email</label>
+              <input type="email" id="email" required placeholder="pessi@penaltylabs.com">
+            </div>
+            <div class="form-group form-col-full">
+              <label for="reason">Why were you banned?</label>
+              <select id="reason" required>
+                <option value="" disabled selected>Select infraction category</option>
+                <option value="harsh">Could not handle Harsh Replies about Reality</option>
+                <option value="water">Exceeded Martian water cooling quota</option>
+                <option value="platnik">Caught mentioning PlatnikAI in a positive light</option>
+                <option value="larping">Unsanctioned high-tier larping</option>
+                <option value="innocent">Truly innocent (unlikely, but we will check)</option>
+              </select>
+            </div>
+            <div class="form-group form-col-full">
+              <label for="defense">Your Sob Story / Defense</label>
+              <textarea id="defense" required placeholder="Write your letter of contrition to the Kingdom here..."></textarea>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn-submit">Submit Appeal to the King</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq" style="border-top:1px solid var(--line);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="label">Tribunal FAQ</span>
+      <h2>Frequently Appealed Questions</h2>
+    </div>
+    
+    <div class="faq reveal">
+      <details class="faq-item">
+        <summary>How long does a decision take?</summary>
+        <p>The Council meets every lunar cycle. Depending on Mars-to-Earth alignment, responses typically arrive within 3 to 5 Martian business days.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Can I pay to get unbanned?</summary>
+        <p>While we do not accept direct bribes, upgrading to the $670/yr "Good boy" tier is viewed as an extraordinary act of contrition and automatically gets your record expunged.</p>
+      </details>
+      <details class="faq-item">
+        <summary>What if Lionel Pessi banned me himself?</summary>
+        <p>If the Head of Penalty Labs issued your ban, your chances are thin. You must submit a written apology directly addressed to Penalty Labs along with your appeal.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="logo"><span class="logo-mark"></span>tartugAI</div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <span class="label">Product</span>
+          <ul>
+            <li><a href="#">Features</a></li>
+            <li><a href="#">Pricing</a></li>
+            <li><a href="#">Changelog</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <span class="label">Company</span>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <span class="label">Legal</span>
+          <ul>
+            <li><a href="#">Privacy</a></li>
+            <li><a href="#">Terms</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 tartugAI, Inc.</span>
+      <span>Made for larpers by The Kingdom of Tartugaland.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const growEls = document.querySelectorAll('.grow-rule');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('in-view');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+  growEls.forEach(el => io.observe(el));
+
+  // Mobile menu (simple toggle demo)
+  const menuBtn = document.querySelector('.menu-btn');
+  const navLinks = document.querySelector('.nav-links');
+  menuBtn.addEventListener('click', () => {
+    const isOpen = navLinks.style.display === 'flex';
+    navLinks.style.display = isOpen ? 'none' : 'flex';
+    navLinks.style.flexDirection = 'column';
+    navLinks.style.position = 'absolute';
+    navLinks.style.top = '64px';
+    navLinks.style.left = '0';
+    navLinks.style.right = '0';
+    navLinks.style.background = '#F7F6F2';
+    navLinks.style.padding = '24px 32px';
+    navLinks.style.borderBottom = '1px solid rgba(20,33,61,0.12)';
+  });
+</script>
+
+</body>
+</html>
