@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>JabirScript Docs - Live Editor</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{
+    --bg: #090e17;
+    --surface: #0f172a;
+    --border: #1e293b;
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --primary: #3b82f6;
+    --primary-light: rgba(59, 130, 246, 0.15);
+    --code-bg: #1e2530;
+    --code-text: #f8fafc;
+}
+
+html[data-theme="light"]{
+    --bg: #ffffff;
+    --surface: #f8fafc;
+    --border: #e2e8f0;
+    --text: #1e293b;
+    --muted: #64748b;
+    --primary: #2563eb;
+    --primary-light: #eff6ff;
+    --code-bg: #1e2530;
+    --code-text: #f8fafc;
+}
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    min-height: 100vh;
+    line-height: 1.6;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+/* Sidebar */
+aside{
+    width: 260px;
+    position: fixed;
+    height: 100vh;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 30px 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.sidebar-top {
+    display: flex;
+    flex-direction: column;
+}
+.logo-area{
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 30px;
+}
+.nav-group{ margin-bottom: 30px; }
+.nav-group h4{
+    color: var(--muted);
+    margin-bottom: 10px;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+.nav-group a{
+    display: block;
+    color: var(--text);
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+.nav-group a:hover{
+    background: var(--border);
+}
+.nav-group a.active{
+    color: var(--primary);
+    background: var(--primary-light);
+    font-weight: 500;
+}
+
+/* Live Editor Nav Button */
+.editor-nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    background: var(--primary);
+    color: #ffffff;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    margin-bottom: 15px;
+    transition: opacity 0.15s ease;
+}
+.editor-nav-btn:hover {
+    opacity: 0.9;
+}
+
+/* Theme Toggle Button */
+.theme-toggle-area {
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+}
+#theme-toggle {
+    width: 100%;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+#theme-toggle:hover {
+    background: var(--border);
+}
+
+/* Main */
+main{
+    margin-left: 260px;
+    width: calc(100% - 260px);
+    padding: 50px 60px;
+    max-width: 1000px;
+}
+section{
+    margin-bottom: 50px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 35px;
+}
+
+h1{ font-size: 2rem; margin-bottom: 15px; font-weight: 700; }
+h2{ margin-top: 30px; margin-bottom: 15px; font-size: 1.4rem; }
+p{ color: var(--muted); margin-bottom: 15px; }
+code{ font-size: 0.9rem; }
+
+/* Editor Layout (Stacked & Full Width) */
+.editor-workspace {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    margin-top: 20px;
+}
+.editor-pane {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.editor-pane label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Editor Wrapper for Syntax Highlighting Overlay */
+.editor-container-box {
+    position: relative;
+    width: 100%;
+    height: 380px;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+}
+.editor-container-box:focus-within {
+    border-color: var(--primary);
+}
+
+textarea.code-input, .code-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+textarea.code-input {
+    background: transparent;
+    color: transparent;
+    caret-color: var(--code-text);
+    border: none;
+    resize: none;
+    outline: none;
+    z-index: 2;
+}
+
+.code-backdrop {
+    background: var(--code-bg);
+    color: var(--code-text);
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+/* JabirScript Token Colors */
+.jb-keyword{ color: #f472b6; }
+.jb-func{ color: #a78bfa; }
+.jb-string{ color: #34d399; }
+.jb-op{ color: #f8fafc; }
+.jb-term{ color: #94a3b8; }
+
+.output-box {
+    width: 100%;
+    height: 180px;
+    background: var(--code-bg);
+    color: #34d399;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+    overflow-y: auto;
+    white-space: pre-wrap;
+}
+.run-btn {
+    margin-top: 15px;
+    background: var(--primary);
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+    align-self: flex-start;
+}
+.run-btn:hover {
+    opacity: 0.9;
+}
+
+/* Callout */
+.callout{
+    margin-top: 20px;
+    padding: 16px 20px;
+    border-radius: 8px;
+    background: var(--primary-light);
+    border-left: 4px solid var(--primary);
+}
+.callout p{ color: var(--text); margin-bottom: 0; }
+
+@media(max-width: 768px){
+    aside{ display: none; }
+    main{ margin-left: 0; width: 100%; padding: 20px; }
+    section{ padding: 20px; }
+}
+</style>
+</head>
+<body>
+
+<aside>
+    <div class="sidebar-top">
+        <div class="logo-area">JabirScript</div>
+        <div class="nav-group">
+            <h4>Get Started</h4>
+            <a href="tartugx.github.io/jabirscript/docs">Introduction</a>
+        </div>
+        <div class="nav-group">
+            <h4>Language</h4>
+            <a href="tartugx.github.io/jabirscript/variable">Variables</a>
+            <a href="tartugx.github.io/jabirscript/input">Conditionals & Inputs</a>
+            <a href="tartugx.github.io/jabirscript/operators">Operators</a>
+        </div>
+    </div>
+    <div class="theme-toggle-area">
+        <a href="tartugx.github.io/jabirscript/live-editor" class="editor-nav-btn active">⚡ Live Editor</a>
+        <button id="theme-toggle">
+            <span id="theme-icon">🌙</span> <span id="theme-text">Dark Mode</span>
+        </button>
+    </div>
+</aside>
+
+<main>
+    <section>
+        <h1>JabirScript Live Editor</h1>
+        <p>Test your JabirScript code live in the browser workspace. Write your syntax below with active syntax highlighting and hit run to see the output executed instantly.</p>
+
+        <div class="editor-workspace">
+            <div class="editor-pane">
+                <label for="script-input">Source Code</label>
+                <div class="editor-container-box">
+                    <div id="code-backdrop" class="code-backdrop"></div>
+                    <textarea id="script-input" class="code-input" spellcheck="false" oninput="updateEditor()" onscroll="syncScroll()">thisIs message itEquals &Hello from JabirScript!&??
+popout: message??</textarea>
+                </div>
+                <button class="run-btn" onclick="runScript()">Run Code</button>
+            </div>
+            
+            <div class="editor-pane">
+                <label>Console Output</label>
+                <div id="script-output" class="output-box">> Ready to execute...</div>
+            </div>
+        </div>
+
+        <div class="callout">
+            <p><strong>Editor Workspace:</strong> Use standard <code>popout:</code> functions to print text directly to the console output box below.</p>
+        </div>
+    </section>
+</main>
+
+<script>
+const themeToggle = document.getElementById('theme-toggle');
+const themeIcon = document.getElementById('theme-icon');
+const themeText = document.getElementById('theme-text');
+const htmlElement = document.documentElement;
+
+themeToggle.addEventListener('click', () => {
+    if (htmlElement.getAttribute('data-theme') === 'light') {
+        htmlElement.removeAttribute('data-theme');
+        themeIcon.textContent = '🌙';
+        themeText.textContent = 'Dark Mode';
+    } else {
+        htmlElement.setAttribute('data-theme', 'light');
+        themeIcon.textContent = '☀️';
+        themeText.textContent = 'Light Mode';
+    }
+});
+
+function escapeHtml(text) {
+    return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function highlightJabirScript(text) {
+    let escaped = escapeHtml(text);
+    
+    // Highlight tokens safely using HTML spans
+    // Strings wrapped in &...&
+    escaped = escaped.replace(/(&amp;[^&]*&amp;)/g, '<span class="jb-string">$1</span>');
+    // Keywords
+    escaped = escaped.replace(/\b(thisIs|itEquals|checkIf|thenDo|orElseIf|orElse|closeCheck|into)\b/g, '<span class="jb-keyword">$1</span>');
+    // Functions
+    escaped = escaped.replace(/\b(popout|askUser)(?=:)/g, '<span class="jb-func">$1</span>');
+    // Terminators
+    escaped = escaped.replace(/(\?\?)/g, '<span class="jb-term">$1</span>');
+    
+    return escaped + '<br>';
+}
+
+function updateEditor() {
+    const input = document.getElementById('script-input');
+    const backdrop = document.getElementById('code-backdrop');
+    backdrop.innerHTML = highlightJabirScript(input.value);
+}
+
+function syncScroll() {
+    const input = document.getElementById('script-input');
+    const backdrop = document.getElementById('code-backdrop');
+    backdrop.scrollTop = input.scrollTop;
+    backdrop.scrollLeft = input.scrollLeft;
+}
+
+// Initialize syntax highlighting on load
+window.onload = function() {
+    updateEditor();
+};
+
+function runScript() {
+    const code = document.getElementById('script-input').value;
+    const outputBox = document.getElementById('script-output');
+    outputBox.textContent = "";
+
+    const lines = code.split('\n');
+    let variables = {};
+    let logs = [];
+
+    for (let line of lines) {
+        let trimmed = line.trim();
+        if (!trimmed) continue;
+
+        if (trimmed.startsWith('popout:')) {
+            let content = trimmed.replace('popout:', '').replace('??', '').trim();
+            if (content.startsWith('&') && content.endsWith('&')) {
+                content = content.slice(1, -1);
+            } else if (variables[content] !== undefined) {
+                content = variables[content];
+            }
+            logs.push(content);
+        } else if (trimmed.startsWith('thisIs')) {
+            let parts = trimmed.replace('??', '').split('itEquals');
+            if (parts.length === 2) {
+                let varName = parts[0].replace('thisIs', '').trim();
+                let val = parts[1].trim();
+                if (val.startsWith('&') && val.endsWith('&')) {
+                    val = val.slice(1, -1);
+                }
+                variables[varName] = val;
+            }
+        }
+    }
+
+    if (logs.length > 0) {
+        outputBox.textContent = logs.join('\n');
+    } else {
+        outputBox.textContent = "> Execution completed successfully (No output generated).";
+    }
+}
+</script>
+
+</body>
+</html>
