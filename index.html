@@ -3,661 +3,525 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>tartugAI</title>
+<title>femboy tights LLC — cute. comfy. confident.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,450;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#14213D;
-    --bg:#F7F6F2;
-    --bg-alt:#EFEEE8;
-    --sage:#5B7B6B;
-    --gold:#C9A227;
-    --gray:#6B6B68;
-    --line:rgba(20,33,61,0.12);
-    --radius:2px;
-    --max:1160px;
+    --pink-bg:#ffe3ef;
+    --pink-bg-2:#ffd0e6;
+    --pink-hot:#ff2f92;
+    --pink-mid:#ff70b3;
+    --pink-soft:#ffc2de;
+    --ink:#1c1219;
+    --white:#fffaff;
+    --stripe-pink:#ff5aa4;
+    --shadow-pink: rgba(255,47,146,.25);
   }
-
-  *{box-sizing:border-box;}
+  *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth;}
-  @media (prefers-reduced-motion: reduce){
-    html{scroll-behavior:auto;}
-    *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
-  }
-
   body{
-    margin:0;
-    background:var(--bg);
+    font-family:'Poppins', sans-serif;
+    background:
+      radial-gradient(circle at 15% 8%, rgba(255,255,255,.7), transparent 22%),
+      radial-gradient(circle at 85% 15%, rgba(255,255,255,.5), transparent 20%),
+      linear-gradient(180deg, var(--pink-bg) 0%, var(--pink-bg-2) 100%);
     color:var(--ink);
-    font-family:'Inter', sans-serif;
-    font-size:16px;
-    line-height:1.6;
-    -webkit-font-smoothing:antialiased;
-  }
-
-  h1,h2,h3{
-    font-family:'Fraunces', serif;
-    font-weight:450;
-    margin:0;
-    letter-spacing:-0.01em;
-  }
-
-  .label{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:12px;
-    text-transform:uppercase;
-    letter-spacing:0.12em;
-    color:var(--sage);
-    font-weight:500;
-  }
-
-  a{color:inherit;}
-  img{max-width:100%; display:block;}
-
-  .wrap{
-    max-width:var(--max);
-    margin:0 auto;
-    padding:0 32px;
-  }
-
-  /* ---------- Nav ---------- */
-  header{
-    position:sticky; top:0; z-index:50;
-    background:rgba(247,246,242,0.88);
-    backdrop-filter:blur(8px);
-    border-bottom:1px solid var(--line);
-  }
-  nav{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:20px 32px;
-    max-width:var(--max);
-    margin:0 auto;
-  }
-  .logo{
-    font-family:'Fraunces', serif;
-    font-size:20px;
-    font-weight:600;
-    display:flex;
-    align-items:center;
-    gap:8px;
-  }
-  .logo-mark{
-    width:10px; height:10px;
-    background:var(--gold);
-    border-radius:50%;
-  }
-  .nav-links{
-    display:flex;
-    gap:36px;
-    list-style:none;
-    margin:0; padding:0;
-    font-size:14px;
-  }
-  .nav-links a{
-    text-decoration:none;
-    color:var(--ink);
-    opacity:0.75;
-    transition:opacity 0.2s;
-  }
-  .nav-links a:hover, .nav-links a:focus-visible{opacity:1;}
-  .nav-cta{
-    font-size:14px;
-    font-weight:500;
-    text-decoration:none;
-    padding:10px 20px;
-    background:var(--ink);
-    color:var(--bg);
-    border-radius:var(--radius);
-    transition:transform 0.2s ease, background 0.2s ease;
-  }
-  .nav-cta:hover{background:var(--sage);}
-  .menu-btn{display:none; background:none; border:none; cursor:pointer; padding:8px;}
-  .menu-btn span{display:block; width:22px; height:2px; background:var(--ink); margin:5px 0;}
-
-  a:focus-visible, button:focus-visible{
-    outline:2px solid var(--gold);
-    outline-offset:3px;
-  }
-
-  /* ---------- Hero ---------- */
-  .hero{
-    padding:120px 32px 100px;
-    max-width:var(--max);
-    margin:0 auto;
-    display:grid;
-    grid-template-columns:1.2fr 0.8fr;
-    gap:64px;
-    align-items:end;
-  }
-  .hero-eyebrow{margin-bottom:22px;}
-  .hero h1{
-    font-size:clamp(40px, 6vw, 68px);
-    line-height:1.05;
-  }
-  .hero h1 em{
-    font-style:italic;
-    color:var(--sage);
+    overflow-x:hidden;
     position:relative;
   }
-  .hero-sub{
-    margin-top:28px;
-    font-size:18px;
-    color:var(--gray);
-    max-width:46ch;
+  h1,h2,h3,.display{font-family:'Baloo 2', sans-serif;}
+
+  /* sparkle field */
+  .sparkle-layer{position:fixed; inset:0; pointer-events:none; z-index:0;}
+  .sparkle{position:absolute; color:var(--pink-mid); opacity:.55; animation:twinkle 3.2s ease-in-out infinite;}
+  @keyframes twinkle{0%,100%{opacity:.15; transform:scale(.8);} 50%{opacity:.7; transform:scale(1.15);}}
+
+  /* heart cursor trail */
+  .heart-particle{position:fixed; pointer-events:none; z-index:9999; font-size:14px; color:var(--pink-hot); animation:floatUp 900ms ease-out forwards;}
+  @keyframes floatUp{ to{ transform:translateY(-60px) scale(.4) rotate(20deg); opacity:0;} }
+
+  a{color:inherit; text-decoration:none;}
+
+  /* ===== NAV ===== */
+  header{
+    position:sticky; top:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 6vw;
+    background:rgba(255,227,239,.85);
+    backdrop-filter:blur(10px);
+    border-bottom:2px dashed var(--pink-mid);
   }
-  .hero-actions{
-    margin-top:40px;
-    display:flex;
-    gap:16px;
-    align-items:center;
-    flex-wrap:wrap;
+  .logo{
+    font-family:'Baloo 2'; font-weight:800; font-size:1.4rem; color:var(--pink-hot);
+    display:flex; align-items:center; gap:6px;
+    text-shadow: 1px 1px 0 #fff;
+  }
+  .logo small{font-family:'Poppins'; font-weight:600; font-size:.6rem; color:var(--ink); letter-spacing:.12em; display:block;}
+  nav ul{list-style:none; display:flex; gap:28px; font-weight:600; font-size:.92rem;}
+  nav a{position:relative; transition:color .2s;}
+  nav a:hover{color:var(--pink-hot);}
+  nav a::after{content:''; position:absolute; left:0; bottom:-4px; width:0; height:2px; background:var(--pink-hot); transition:width .25s;}
+  nav a:hover::after{width:100%;}
+  .cart-btn{
+    background:var(--ink); color:var(--white); border:none; padding:10px 18px;
+    border-radius:999px; font-weight:700; font-family:'Poppins'; cursor:pointer;
+    display:flex; align-items:center; gap:8px; font-size:.9rem;
+    box-shadow:0 4px 0 var(--pink-hot);
+    transition:transform .15s;
+  }
+  .cart-btn:active{transform:translateY(3px); box-shadow:0 1px 0 var(--pink-hot);}
+
+  /* ===== HERO ===== */
+  .hero{
+    position:relative; z-index:1;
+    text-align:center;
+    padding:70px 6vw 40px;
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:10px;
+    font-weight:700; letter-spacing:.14em; font-size:.8rem;
+    color:var(--pink-hot); margin-bottom:18px;
+  }
+  .eyebrow::before, .eyebrow::after{content:'♡'; font-size:.9rem;}
+  .wordmark{
+    font-size:clamp(3.2rem, 11vw, 7.5rem);
+    font-weight:800; line-height:.95;
+    color:var(--pink-hot);
+    -webkit-text-stroke: 2px #ffffff;
+    text-shadow: 0 6px 0 rgba(255,47,146,.15);
+    transform:rotate(-2deg);
+    letter-spacing:-2px;
+  }
+  .wordmark .sub{
+    display:block;
+    color:var(--ink);
+    -webkit-text-stroke:0;
+    font-size:clamp(2.6rem, 9vw, 6rem);
+    transform:rotate(1deg);
+    margin-top:-.1em;
+  }
+  .llc-tag{
+    display:inline-block; margin-top:10px;
+    font-family:'Baloo 2'; font-weight:700; color:var(--pink-hot);
+    font-size:1.3rem; letter-spacing:.3em;
+    border-top:3px solid var(--pink-mid); border-bottom:3px solid var(--pink-mid);
+    padding:6px 22px;
+  }
+  .tagline{
+    margin-top:30px; font-family:'Baloo 2'; font-weight:700; font-size:clamp(1.4rem,3.6vw,2.2rem);
+  }
+  .tagline .black{color:var(--ink);}
+  .tagline .pink{color:var(--pink-hot);}
+  .desc{
+    max-width:480px; margin:18px auto 0; font-size:1rem; color:#4a3540; line-height:1.6;
+  }
+  .desc .b{color:var(--pink-hot); font-weight:700;}
+
+  .hero-cta{
+    margin-top:34px; display:flex; gap:16px; justify-content:center; flex-wrap:wrap;
+  }
+  .btn-primary, .btn-ghost{
+    font-family:'Baloo 2'; font-weight:700; font-size:1.05rem;
+    padding:14px 30px; border-radius:999px; cursor:pointer; border:none;
+    transition:transform .15s, box-shadow .15s;
   }
   .btn-primary{
-    font-size:15px;
-    font-weight:500;
-    text-decoration:none;
-    padding:15px 28px;
-    background:var(--ink);
-    color:var(--bg);
-    border-radius:var(--radius);
-    display:inline-block;
-    transition:background 0.2s ease, transform 0.2s ease;
+    background:var(--ink); color:var(--white);
+    box-shadow:0 6px 0 var(--pink-hot);
   }
-  .btn-primary:hover{background:var(--sage); transform:translateY(-1px);}
+  .btn-primary:hover{transform:translateY(-2px);}
+  .btn-primary:active{transform:translateY(4px); box-shadow:0 2px 0 var(--pink-hot);}
   .btn-ghost{
-    font-size:15px;
-    font-weight:500;
-    text-decoration:none;
-    color:var(--ink);
-    border-bottom:1px solid var(--ink);
-    padding-bottom:2px;
+    background:transparent; color:var(--pink-hot); border:2px solid var(--pink-hot);
   }
-  .hero-side{
-    border-left:1px solid var(--line);
-    padding-left:32px;
-  }
-  .hero-side p{
-    font-size:15px;
-    color:var(--gray);
-    margin:0 0 20px;
-  }
-  .grow-rule{
-    width:0%;
-    height:1px;
-    background:var(--gold);
-    transition:width 1.4s cubic-bezier(.2,.7,.2,1);
-    margin-bottom:20px;
-  }
-  .grow-rule.in-view{width:100%;}
+  .btn-ghost:hover{background:var(--pink-hot); color:#fff;}
 
-  /* ---------- Logos strip ---------- */
-  .logos{
-    border-top:1px solid var(--line);
-    border-bottom:1px solid var(--line);
-    padding:28px 32px;
+  /* vibe toggle - signature element */
+  .vibe-widget{
+    margin:46px auto 0; max-width:360px;
+    background:#fff; border:2px solid var(--pink-mid); border-radius:24px;
+    padding:18px 22px; box-shadow:0 8px 0 var(--pink-soft);
   }
-  .logos .wrap{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    flex-wrap:wrap;
-    gap:20px;
+  .vibe-label{font-size:.72rem; font-weight:700; letter-spacing:.12em; color:#a04070; margin-bottom:10px;}
+  .vibe-row{display:flex; align-items:center; justify-content:center; gap:16px;}
+  .vibe-side{font-family:'Baloo 2'; font-weight:700; font-size:1rem; color:#c98; transition:color .3s, transform .3s;}
+  .vibe-side.active{color:var(--pink-hot); transform:scale(1.12);}
+  .bow-switch{
+    width:58px; height:30px; background:var(--pink-soft); border-radius:999px; position:relative; cursor:pointer;
+    border:2px solid var(--pink-mid);
   }
-  .logos span{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:13px;
-    color:var(--gray);
-    opacity:0.6;
-    letter-spacing:0.04em;
+  .bow-switch .knob{
+    position:absolute; top:1px; left:1px; width:22px; height:22px; border-radius:50%;
+    background:var(--pink-hot); transition:left .3s cubic-bezier(.68,-0.4,.27,1.4);
+    display:flex; align-items:center; justify-content:center; font-size:11px; color:#fff;
   }
+  .bow-switch.on .knob{left:30px;}
+  .vibe-quote{margin-top:12px; font-size:.95rem; font-style:italic; color:var(--ink); min-height:24px;}
 
-  /* ---------- Section shared ---------- */
-  section{padding:100px 0;}
-  .section-head{
-    max-width:640px;
-    margin-bottom:56px;
+  /* ===== SECTION SHELL ===== */
+  section{position:relative; z-index:1; padding:70px 6vw;}
+  .section-title{
+    text-align:center; font-size:clamp(1.8rem,4vw,2.6rem); font-weight:800; color:var(--ink);
+    margin-bottom:8px;
   }
-  .section-head .label{margin-bottom:16px; display:block;}
-  .section-head h2{
-    font-size:clamp(30px, 4vw, 42px);
-    line-height:1.15;
-  }
-  .section-head p{
-    margin-top:18px;
-    color:var(--gray);
-    font-size:17px;
-  }
+  .section-title .pink{color:var(--pink-hot);}
+  .section-sub{text-align:center; color:#7a5568; margin-bottom:44px; font-size:.95rem;}
 
-  .reveal{
-    opacity:0;
-    transform:translateY(18px);
-    transition:opacity 0.7s ease, transform 0.7s ease;
+  /* ===== PRODUCT GRID ===== */
+  .grid{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(230px,1fr)); gap:24px; max-width:1200px; margin:0 auto;
   }
-  .reveal.in-view{opacity:1; transform:translateY(0);}
+  .card{
+    background:#fff; border-radius:22px; border:2px solid var(--pink-soft);
+    overflow:hidden; position:relative; box-shadow:0 6px 0 var(--pink-soft);
+    transition:transform .25s, box-shadow .25s;
+  }
+  .card:hover{transform:translateY(-6px); box-shadow:0 12px 0 var(--pink-soft);}
+  .card .img{
+    height:230px; display:flex; align-items:center; justify-content:center; font-size:4.4rem;
+    background:linear-gradient(160deg, var(--pink-bg), #fff);
+    position:relative;
+  }
+  .card .badge{
+    position:absolute; top:12px; left:12px; background:var(--pink-hot); color:#fff;
+    font-size:.65rem; font-weight:700; padding:5px 10px; border-radius:999px; letter-spacing:.05em;
+  }
+  .card-body{padding:16px 18px 20px;}
+  .card-body h3{font-size:1.1rem; margin-bottom:4px;}
+  .card-body .price{color:var(--pink-hot); font-weight:700; margin-bottom:10px; font-family:'Baloo 2';}
+  .card-body p{font-size:.85rem; color:#7a5568; margin-bottom:14px; line-height:1.4;}
+  .add-btn{
+    width:100%; background:var(--ink); color:#fff; border:none; padding:10px; border-radius:999px;
+    font-weight:700; font-family:'Baloo 2'; cursor:pointer; font-size:.85rem;
+    transition:background .2s, transform .1s;
+  }
+  .add-btn:hover{background:var(--pink-hot);}
+  .add-btn:active{transform:scale(.96);}
 
-  /* ---------- Features ---------- */
-  .features-grid{
-    display:grid;
-    grid-template-columns:repeat(3, 1fr);
-    gap:1px;
-    background:var(--line);
-    border:1px solid var(--line);
+  /* ===== TRUST STRIP ===== */
+  .trust{
+    background:#fff; border-radius:28px; border:2px dashed var(--pink-mid);
+    max-width:1100px; margin:0 auto; padding:36px 5vw;
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:26px;
   }
-  .feature{
-    background:var(--bg);
-    padding:40px 36px;
-  }
-  .feature .label{margin-bottom:24px;}
-  .feature h3{font-size:22px; margin-bottom:14px; font-weight:450;}
-  .feature p{color:var(--gray); font-size:15px; margin:0;}
+  .trust-item{text-align:center;}
+  .trust-item .ic{font-size:1.8rem; margin-bottom:8px;}
+  .trust-item h4{font-family:'Baloo 2'; color:var(--pink-hot); font-size:.95rem; margin-bottom:4px;}
+  .trust-item p{font-size:.8rem; color:#7a5568;}
 
-  /* ---------- Showcase / signature element ---------- */
-  .showcase{
-    background:var(--ink);
-    color:var(--bg);
-    border-radius:var(--radius);
-    padding:64px;
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:56px;
-    align-items:center;
+  /* ===== FOOTER / CTA BAR ===== */
+  .final-cta{
+    text-align:center; padding:80px 6vw 50px;
   }
-  .showcase .label{color:var(--gold);}
-  .showcase h2{color:var(--bg); font-size:32px; margin-top:16px;}
-  .showcase p{color:rgba(247,246,242,0.72); margin-top:16px; font-size:16px;}
-  .showcase-panel{
-    background:rgba(247,246,242,0.06);
-    border:1px solid rgba(247,246,242,0.16);
-    border-radius:var(--radius);
-    padding:28px;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:13px;
+  .cta-panel{
+    max-width:640px; margin:0 auto; background:var(--ink); color:#fff; border-radius:28px;
+    padding:44px 30px; box-shadow:0 10px 0 var(--pink-hot);
   }
-  .showcase-row{
-    display:flex;
-    justify-content:space-between;
-    padding:12px 0;
-    border-bottom:1px solid rgba(247,246,242,0.12);
-    color:rgba(247,246,242,0.85);
-  }
-  .showcase-row:last-child{border-bottom:none;}
-  .showcase-row .ok{color:var(--gold);}
-
-  /* ---------- Testimonial ---------- */
-  .testimonial{
-    text-align:left;
-    max-width:760px;
-  }
-  .testimonial blockquote{
-    font-family:'Fraunces', serif;
-    font-size:clamp(24px, 3vw, 32px);
-    font-weight:450;
-    line-height:1.4;
-    margin:0;
-    font-style:italic;
-  }
-  .testimonial cite{
-    display:block;
-    margin-top:28px;
-    font-style:normal;
-    font-size:14px;
-    color:var(--gray);
-  }
-
-  /* ---------- Pricing ---------- */
-  .pricing-grid{
-    display:grid;
-    grid-template-columns:repeat(3, 1fr);
-    gap:24px;
-  }
-  .plan{
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    padding:36px 32px;
-    background:var(--bg);
-    display:flex;
-    flex-direction:column;
-  }
-  .plan.featured{
-    background:var(--ink);
-    color:var(--bg);
-    border-color:var(--ink);
-  }
-  .plan.featured .plan-desc{color:rgba(247,246,242,0.7);}
-  .plan.featured .plan-features li{color:rgba(247,246,242,0.85);}
-  .plan.featured .plan-features li::before{color:var(--gold);}
-  .plan-index{font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--sage); letter-spacing:0.1em;}
-  .plan.featured .plan-index{color:var(--gold);}
-  .plan-name{font-size:22px; margin-top:14px; font-family:'Fraunces', serif;}
-  .plan-price{font-size:40px; margin-top:18px; font-family:'Fraunces', serif;}
-  .plan-price span{font-size:15px; font-family:'Inter', sans-serif; color:var(--gray); font-weight:400;}
-  .plan.featured .plan-price span{color:rgba(247,246,242,0.6);}
-  .plan-desc{font-size:14px; color:var(--gray); margin-top:10px;}
-  .plan-features{list-style:none; padding:0; margin:28px 0 32px; flex-grow:1;}
-  .plan-features li{
-    font-size:14px;
-    padding:9px 0;
-    border-top:1px solid var(--line);
-    color:var(--ink);
-  }
-  .plan.featured .plan-features li{border-top:1px solid rgba(247,246,242,0.14);}
-  .plan-features li:first-child{border-top:none;}
-  .plan-features li::before{content:"— "; color:var(--sage);}
-  .plan-btn{
-    text-align:center;
-    padding:13px;
-    border-radius:var(--radius);
-    text-decoration:none;
-    font-size:14px;
-    font-weight:500;
-    border:1px solid var(--ink);
-    color:var(--ink);
-    transition:background 0.2s, color 0.2s;
-  }
-  .plan-btn:hover{background:var(--ink); color:var(--bg);}
-  .plan.featured .plan-btn{
-    border:1px solid var(--gold);
-    color:var(--ink);
-    background:var(--gold);
-  }
-  .plan.featured .plan-btn:hover{background:transparent; color:var(--bg);}
-
-  /* ---------- FAQ ---------- */
-  .faq{max-width:760px;}
-  .faq-item{
-    border-top:1px solid var(--line);
-    padding:24px 0;
-  }
-  .faq-item:last-child{border-bottom:1px solid var(--line);}
-  .faq-item summary{
-    cursor:pointer;
-    font-family:'Fraunces', serif;
-    font-size:18px;
-    list-style:none;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-  }
-  .faq-item summary::-webkit-details-marker{display:none;}
-  .faq-item summary::after{
-    content:"+";
-    font-family:'Inter', sans-serif;
-    font-size:20px;
-    color:var(--sage);
-    transition:transform 0.2s;
-  }
-  .faq-item[open] summary::after{transform:rotate(45deg);}
-  .faq-item p{color:var(--gray); font-size:15px; margin:14px 0 0;}
-
-  /* ---------- CTA band ---------- */
-  .cta-band{
-    background:var(--bg-alt);
-    border-radius:var(--radius);
-    padding:72px;
-    text-align:center;
-  }
-  .cta-band h2{font-size:clamp(28px, 4vw, 40px); max-width:600px; margin:0 auto;}
-  .cta-band p{color:var(--gray); margin-top:16px;}
-  .cta-band .hero-actions{justify-content:center; margin-top:32px;}
-
-  /* ---------- Footer ---------- */
+  .cta-panel h2{font-family:'Baloo 2'; font-size:clamp(1.6rem,4vw,2.3rem); margin-bottom:8px;}
+  .cta-panel h2 .pink{color:var(--pink-mid);}
+  .cta-panel p{color:#e8c8d8; font-size:.9rem; margin-bottom:24px;}
   footer{
-    border-top:1px solid var(--line);
-    padding:56px 0 40px;
+    text-align:center; padding:30px 6vw 50px; font-size:.8rem; color:#a06080;
   }
-  .footer-top{
-    display:flex;
-    justify-content:space-between;
-    flex-wrap:wrap;
-    gap:40px;
-    padding-bottom:40px;
+  footer .heart{color:var(--pink-hot);}
+
+  /* ===== CART DRAWER ===== */
+  .overlay{
+    position:fixed; inset:0; background:rgba(30,10,20,.45); z-index:200;
+    opacity:0; pointer-events:none; transition:opacity .3s;
   }
-  .footer-cols{
-    display:flex;
-    gap:64px;
-    flex-wrap:wrap;
+  .overlay.show{opacity:1; pointer-events:all;}
+  .drawer{
+    position:fixed; top:0; right:-420px; width:min(400px, 90vw); height:100%; background:var(--white);
+    z-index:201; box-shadow:-8px 0 30px rgba(0,0,0,.15); transition:right .35s cubic-bezier(.68,-0.2,.27,1.15);
+    display:flex; flex-direction:column;
   }
-  .footer-col .label{margin-bottom:16px; display:block;}
-  .footer-col ul{list-style:none; padding:0; margin:0;}
-  .footer-col li{margin-bottom:10px;}
-  .footer-col a{text-decoration:none; color:var(--gray); font-size:14px; transition:color 0.2s;}
-  .footer-col a:hover{color:var(--ink);}
-  .footer-bottom{
-    border-top:1px solid var(--line);
-    padding-top:24px;
-    display:flex;
-    justify-content:space-between;
-    flex-wrap:wrap;
-    gap:12px;
-    font-size:13px;
-    color:var(--gray);
+  .drawer.show{right:0;}
+  .drawer-head{
+    padding:22px 22px 16px; border-bottom:2px dashed var(--pink-soft);
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .drawer-head h3{font-family:'Baloo 2'; color:var(--pink-hot); font-size:1.3rem;}
+  .close-btn{background:none; border:none; font-size:1.4rem; cursor:pointer; color:var(--ink);}
+  .drawer-items{flex:1; overflow-y:auto; padding:16px 22px;}
+  .drawer-item{
+    display:flex; gap:12px; align-items:center; padding:12px 0; border-bottom:1px solid #ffe6f0;
+  }
+  .drawer-item .di-img{font-size:1.8rem; width:46px; height:46px; background:var(--pink-bg); border-radius:12px; display:flex; align-items:center; justify-content:center;}
+  .drawer-item .di-info{flex:1;}
+  .drawer-item .di-info h4{font-size:.9rem;}
+  .drawer-item .di-info span{font-size:.8rem; color:var(--pink-hot); font-weight:600;}
+  .empty-cart{text-align:center; color:#a06080; margin-top:60px; font-size:.9rem;}
+  .drawer-foot{padding:18px 22px 26px; border-top:2px dashed var(--pink-soft);}
+  .drawer-foot .total-row{display:flex; justify-content:space-between; font-weight:700; margin-bottom:14px; font-family:'Baloo 2'; color:var(--ink);}
+  .checkout-btn{
+    width:100%; padding:14px; background:var(--pink-hot); color:#fff; border:none; border-radius:999px;
+    font-family:'Baloo 2'; font-weight:700; cursor:pointer; box-shadow:0 5px 0 #c40068;
+  }
+  .checkout-btn:active{transform:translateY(3px); box-shadow:0 2px 0 #c40068;}
+  .fine-print{font-size:.7rem; text-align:center; color:#b088a0; margin-top:10px;}
+
+  /* toast */
+  .toast{
+    position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(120%);
+    background:var(--ink); color:#fff; padding:14px 26px; border-radius:999px; font-weight:600;
+    font-size:.9rem; z-index:300; transition:transform .4s cubic-bezier(.68,-0.4,.27,1.4);
+    display:flex; align-items:center; gap:8px;
+  }
+  .toast.show{transform:translateX(-50%) translateY(0);}
+
+  /* checkout modal */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(30,10,20,.55); z-index:400; display:none;
+    align-items:center; justify-content:center; padding:20px;
+  }
+  .modal-overlay.show{display:flex;}
+  .modal{
+    background:#fff; border-radius:26px; max-width:380px; width:100%; padding:34px 28px; text-align:center;
+    border:3px solid var(--pink-hot); box-shadow:0 12px 0 var(--pink-soft);
+  }
+  .modal .big-heart{font-size:2.6rem; margin-bottom:10px;}
+  .modal h3{font-family:'Baloo 2'; color:var(--pink-hot); font-size:1.4rem; margin-bottom:10px;}
+  .modal p{font-size:.88rem; color:#5a3a48; line-height:1.5; margin-bottom:22px;}
+  .modal button{
+    background:var(--ink); color:#fff; border:none; padding:12px 26px; border-radius:999px;
+    font-family:'Baloo 2'; font-weight:700; cursor:pointer;
   }
 
-  /* ---------- Responsive ---------- */
-  @media (max-width:860px){
-    .nav-links{display:none;}
-    .menu-btn{display:block;}
-    .hero{grid-template-columns:1fr; gap:40px; padding-top:64px;}
-    .hero-side{border-left:none; border-top:1px solid var(--line); padding-left:0; padding-top:28px;}
-    .features-grid{grid-template-columns:1fr;}
-    .showcase{grid-template-columns:1fr; padding:40px 28px;}
-    .pricing-grid{grid-template-columns:1fr;}
-    .cta-band{padding:48px 28px;}
-    section{padding:64px 0;}
+  @media (max-width:720px){
+    nav ul{display:none;}
+    .hero{padding-top:44px;}
   }
 </style>
 </head>
 <body>
 
+<div class="sparkle-layer" id="sparkleLayer"></div>
+
 <header>
+  <div class="logo">♡ femboy tights <small>LLC — EST. FOR FUN</small></div>
   <nav>
-    <div class="logo"><span class="logo-mark"></span>tartugAI</div>
-    <ul class="nav-links">
-      <li><a href="#features">Features</a></li>
-      <li><a href="#showcase">Upgrade</a></li>
-      <li><a href="https://tartugx.github.io/support">Support</a></li>
-      <li><a href="https://tartugx.github.io/appeal">Appeal</a></li>
+    <ul>
+      <li><a href="#shop">Shop</a></li>
+      <li><a href="#trust">Why Us</a></li>
+      <li><a href="#cta">Be You</a></li>
     </ul>
-    <a href="#" class="nav-cta">Start free trial</a>
-    <button class="menu-btn" aria-label="Menu"><span></span><span></span><span></span></button>
   </nav>
+  <button class="cart-btn" onclick="openCart()">🛍️ Cart <span id="cartCount">0</span></button>
 </header>
 
 <section class="hero">
-  <div>
-    <span class="label hero-eyebrow">tartugAI</span>
-    <h1>Really<br>cool <em>AI</em>.</h1>
-    <p class="hero-sub">tartugAI is a really cool AI powered by the Kingdom of Tartugaland</p>
-    <div class="hero-actions">
-      <a href="#" class="btn-primary">Start free trial</a>
-      <a href="#showcase" class="btn-ghost">See how it works</a>
-    </div>
+  <div class="eyebrow">CUTE. COMFY. CONFIDENT.</div>
+  <h1 class="wordmark">femboy<span class="sub">tights</span></h1>
+  <div class="llc-tag">LLC</div>
+
+  <p class="tagline"><span class="black">Cute isn't a trend.</span><br><span class="pink">It's you.</span></p>
+  <p class="desc">High quality femboy apparel &amp; accessories designed to make you look cute, feel good, and <span class="b">be</span> yourself.</p>
+
+  <div class="hero-cta">
+    <button class="btn-primary" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">Shop Now ♡</button>
+    <a href="#trust" class="btn-ghost" style="display:inline-flex;align-items:center;">Why We're Different</a>
   </div>
-  <div class="hero-side reveal">
-    <div class="grow-rule"></div>
-    <p>Built for small teams who've outgrown spreadsheets but don't want another bloated tool to manage.</p>
-    <span class="label">No credit card required</span>
+
+  <div class="vibe-widget">
+    <div class="vibe-label">PICK YOUR MOOD TODAY</div>
+    <div class="vibe-row">
+      <span class="vibe-side active" id="shySide">shy</span>
+      <div class="bow-switch" id="bowSwitch" onclick="toggleVibe()"><div class="knob">♡</div></div>
+      <span class="vibe-side" id="confSide">confident</span>
+    </div>
+    <div class="vibe-quote" id="vibeQuote">"maybe just thigh highs today, baby steps 🩶"</div>
   </div>
 </section>
 
-<section id="features">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <span class="label">Why is tartugAI better than a regular AI</span>
-      <h2>Only one way to explain it.</h2>
-      <p>tartugAI is a AI powered by the most prestigious country on mars: Kingdom of Tartugaland.</p>
-    </div>
-    <div class="features-grid reveal">
-      <div class="feature">
-        <span class="label">Clarity</span>
-        <h3>One source of truth</h3>
-        <p>The Kingdom of Tartugaland is the richest and wealthiest country on Mars"</p>
-      </div>
-      <div class="feature">
-        <span class="label">Speed</span>
-        <h3>Replies in Seconds</h3>
-        <p>tartugAI is the fastest working AI that consumes less water than any other AI.</p>
-      </div>
-      <div class="feature">
-        <span class="label">Focus</span>
-        <h3>Good replies</h3>
-        <p>tartugAI has good yet simple replies that make you keep your focus.</p>
-      </div>
-    </div>
+<section id="shop">
+  <h2 class="section-title">The <span class="pink">Collection</span></h2>
+  <p class="section-sub">Everything here is made-up for this demo — no real checkout, promise 🩷</p>
+  <div class="grid" id="productGrid"></div>
+</section>
+
+<section id="trust">
+  <h2 class="section-title">Made for <span class="pink">femboys</span>, loved by femboys</h2>
+  <p class="section-sub">The stuff that (imaginary) customers actually care about</p>
+  <div class="trust">
+    <div class="trust-item"><div class="ic">🛡️</div><h4>High Quality</h4><p>Comfy, durable, and made to last!</p></div>
+    <div class="trust-item"><div class="ic">🚚</div><h4>Discreet Shipping</h4><p>Private packaging, no worries.</p></div>
+    <div class="trust-item"><div class="ic">💗</div><h4>Made For You</h4><p>By femboys, for femboys.</p></div>
+    <div class="trust-item"><div class="ic">🔒</div><h4>Secure Checkout</h4><p>Safe, easy — and 100% fake here.</p></div>
   </div>
 </section>
 
-<section id="showcase">
-  <div class="wrap">
-    <div class="showcase reveal">
-      <div>
-        <span class="label">Inside a project</span>
-        <h2>See the whole picture, not just your slice of it.</h2>
-        <p>67 is cool bro.</p>
-        <div class="hero-actions" style="margin-top:28px;">
-          <a href="#" class="btn-primary">See a live project</a>
-        </div>
-      </div>
-      <div class="showcase-panel">
-        <div class="showcase-row"><span>Homepage redesign</span><span class="ok">On track</span></div>
-        <div class="showcase-row"><span>API migration</span><span class="ok">On track</span></div>
-        <div class="showcase-row"><span>Q3 pricing update</span><span>Needs input</span></div>
-        <div class="showcase-row"><span>Onboarding rewrite</span><span class="ok">Shipped</span></div>
-      </div>
-    </div>
+<section id="cta" class="final-cta">
+  <div class="cta-panel">
+    <h2>Be Cute. <span class="pink">Be You.</span></h2>
+    <p>This is a just-for-fun demo shop — nothing here is real, nothing ships, nothing gets charged. Add stuff to the cart anyway, it's cute.</p>
+    <button class="btn-primary" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">Shop Now ♡</button>
   </div>
 </section>
 
-<section>
-  <div class="wrap">
-    <div class="testimonial reveal">
-      <blockquote>"We stopped using PlatnikAI as soon as we saw the capability of tartugAI, no other AI in the market can compare.  "</blockquote>
-      <cite>Lionel Pessi, Head of Penalty Labs</cite>
-    </div>
-  </div>
-</section>
+<footer>Thank you for supporting a small (imaginary) business made with <span class="heart">♡</span> — demo site, no real payments.</footer>
 
-<section id="pricing">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <span class="label">Pricing</span>
-      <h2>Straightforward plans, no seat-count tricks.</h2>
-    </div>
-    <div class="pricing-grid reveal">
-      <div class="plan">
-        <span class="plan-index">01 — Starter</span>
-        <div class="plan-name">Starter</div>
-        <div class="plan-price">$0<span> yr</span></div>
-        <p class="plan-desc"> Just for personal everyday use.</p>
-        <ul class="plan-features">
-          <li>Limited Replies</li>
-          <li>Harsh Replies about Reality</li>
-          <li>No image generation</li>
-        </ul>
-        <a href="#" class="plan-btn">Get started</a>
-      </div>
-      <div class="plan featured">
-        <span class="plan-index">02 — Growth</span>
-        <div class="plan-name">Growth</div>
-        <div class="plan-price">$67<span> yr</span></div>
-        <p class="plan-desc">For more passionate people.</p>
-        <ul class="plan-features">
-          <li>Unlimited Replies</li>
-          <li>Harsh Replies about Reality</li>
-          <li>Image Generation</li>
-          <li>Priority support</li>
-        </ul>
-        <a href="#" class="plan-btn">Start free trial</a>
-      </div>
-      <div class="plan">
-        <span class="plan-index">03 — Good boy</span>
-        <div class="plan-name">Good boy</div>
-        <div class="plan-price">$670<span> yr</span></div>
-        <p class="plan-desc">For good boys who want to pay a lot.</p>
-        <ul class="plan-features">
-          <li>Unlimited Replies</li>
-          <li>No harsh and 100% Glazed all the time</li>
-          <li>Image Generation</li>
-          <li>Priority support</li>
-        </ul>
-        <a href="#" class="plan-btn">Talk to us</a>
-      </div>
-    </div>
+<!-- CART DRAWER -->
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h3>Your Cart ♡</h3>
+    <button class="close-btn" onclick="closeCart()">✕</button>
   </div>
-</section>
+  <div class="drawer-items" id="drawerItems">
+    <div class="empty-cart">Nothing here yet — go add something cute!</div>
+  </div>
+  <div class="drawer-foot">
+    <div class="total-row"><span>Total</span><span id="cartTotal">$0.00</span></div>
+    <button class="checkout-btn" onclick="fakeCheckout()">Checkout (not real!) ♡</button>
+    <div class="fine-print">This is a demo — no payment will ever be taken.</div>
+  </div>
+</div>
 
-<footer>
-  <div class="wrap">
-    <div class="footer-top">
-      <div class="logo"><span class="logo-mark"></span>tartugAI</div>
-      <div class="footer-cols">
-        <div class="footer-col">
-          <span class="label">Product</span>
-          <ul>
-            <li><a href="#features">Features</a></li>
-            <li><a href="#pricing">Pricing</a></li>
-            <li><a href="#">Changelog</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <span class="label">Company</span>
-          <ul>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Careers</a></li>
-            <li><a href="#">Contact</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <span class="label">Legal</span>
-          <ul>
-            <li><a href="#">Privacy</a></li>
-            <li><a href="#">Terms</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>© 2026 tartugAI, Inc.</span>
-      <span>Made for larpers by The Kingdom of Tartugaland.</span>
-    </div>
+<!-- TOAST -->
+<div class="toast" id="toast">♡ Added to cart!</div>
+
+<!-- FAKE CHECKOUT MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="big-heart">💗</div>
+    <h3>Aww, thanks!</h3>
+    <p id="modalText"></p>
+    <button onclick="closeModal()">Okay, cute!</button>
   </div>
-</footer>
+</div>
 
 <script>
-  // Scroll reveal
-  const revealEls = document.querySelectorAll('.reveal');
-  const growEls = document.querySelectorAll('.grow-rule');
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if(entry.isIntersecting){
-        entry.target.classList.add('in-view');
-        io.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.15 });
-  revealEls.forEach(el => io.observe(el));
-  growEls.forEach(el => io.observe(el));
+  const products = [
+    {emoji:'🧦', name:'Striped Thigh Highs', price:24, tag:'Bestseller', desc:'Black & white stripes, over-the-knee, stays-up elastic.'},
+    {emoji:'🎀', name:'Garter Skirt Set', price:38, tag:'New', desc:'Pleated mini skirt with detachable leg harness.'},
+    {emoji:'🐾', name:'Kitty Hoodie', price:42, tag:'Cozy', desc:'Soft pink hoodie with an embroidered cat graphic.'},
+    {emoji:'🧤', name:'Striped Arm Warmers', price:16, tag:'Fan Fave', desc:'Pink & black stripes, thumb holes, super stretchy.'},
+    {emoji:'👗', name:'Bow Choker', price:12, tag:null, desc:'Velvet ribbon choker with satin bow detail.'},
+    {emoji:'🩱', name:'Pastel Bodysuit', price:34, tag:'Trending', desc:'Soft ribbed fabric, snap closure, four dreamy colors.'},
+    {emoji:'👠', name:'Platform Mary Janes', price:56, tag:null, desc:'2-inch platform, buckle strap, black patent finish.'},
+    {emoji:'🎒', name:'Heart Backpack', price:29, tag:'Cute AF', desc:'Mini heart-shaped backpack with pink chain strap.'}
+  ];
 
-  // Mobile menu (simple toggle demo — expand as needed)
-  const menuBtn = document.querySelector('.menu-btn');
-  const navLinks = document.querySelector('.nav-links');
-  menuBtn.addEventListener('click', () => {
-    const isOpen = navLinks.style.display === 'flex';
-    navLinks.style.display = isOpen ? 'none' : 'flex';
-    navLinks.style.flexDirection = 'column';
-    navLinks.style.position = 'absolute';
-    navLinks.style.top = '64px';
-    navLinks.style.left = '0';
-    navLinks.style.right = '0';
-    navLinks.style.background = '#F7F6F2';
-    navLinks.style.padding = '24px 32px';
-    navLinks.style.borderBottom = '1px solid rgba(20,33,61,0.12)';
+  const grid = document.getElementById('productGrid');
+  products.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="img">${p.tag ? `<div class="badge">${p.tag}</div>` : ''}${p.emoji}</div>
+      <div class="card-body">
+        <h3>${p.name}</h3>
+        <div class="price">$${p.price.toFixed(2)}</div>
+        <p>${p.desc}</p>
+        <button class="add-btn" onclick="addToCart(${i}, event)">Add to Cart ♡</button>
+      </div>`;
+    grid.appendChild(card);
   });
-</script>
 
+  let cart = [];
+
+  function addToCart(i, evt){
+    cart.push(products[i]);
+    updateCart();
+    showToast(`♡ ${products[i].name} added!`);
+    burstHearts(evt.clientX, evt.clientY);
+  }
+
+  function updateCart(){
+    document.getElementById('cartCount').textContent = cart.length;
+    const itemsEl = document.getElementById('drawerItems');
+    if(cart.length === 0){
+      itemsEl.innerHTML = '<div class="empty-cart">Nothing here yet — go add something cute!</div>';
+    } else {
+      itemsEl.innerHTML = cart.map(p => `
+        <div class="drawer-item">
+          <div class="di-img">${p.emoji}</div>
+          <div class="di-info"><h4>${p.name}</h4><span>$${p.price.toFixed(2)}</span></div>
+        </div>`).join('');
+    }
+    const total = cart.reduce((s,p)=>s+p.price,0);
+    document.getElementById('cartTotal').textContent = `$${total.toFixed(2)}`;
+  }
+
+  function openCart(){
+    document.getElementById('drawer').classList.add('show');
+    document.getElementById('overlay').classList.add('show');
+  }
+  function closeCart(){
+    document.getElementById('drawer').classList.remove('show');
+    document.getElementById('overlay').classList.remove('show');
+  }
+
+  function showToast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'), 1800);
+  }
+
+  function burstHearts(x,y){
+    for(let i=0;i<6;i++){
+      const h = document.createElement('div');
+      h.className = 'heart-particle';
+      h.textContent = ['♡','💗','✨'][Math.floor(Math.random()*3)];
+      h.style.left = (x + (Math.random()*60-30)) + 'px';
+      h.style.top = (y + (Math.random()*20-10)) + 'px';
+      document.body.appendChild(h);
+      setTimeout(()=>h.remove(), 950);
+    }
+  }
+
+  function fakeCheckout(){
+    if(cart.length === 0){
+      document.getElementById('modalText').textContent = "Your cart is empty! Go pick out something cute first ♡";
+    } else {
+      const total = cart.reduce((s,p)=>s+p.price,0);
+      document.getElementById('modalText').textContent =
+        `This would've been a $${total.toFixed(2)} order for ${cart.length} item${cart.length>1?'s':''} — but this is just a fun demo site, so no real payment happened. Nothing was charged, nothing will ship. Be cute anyway. 💗`;
+      cart = [];
+      updateCart();
+    }
+    document.getElementById('modalOverlay').classList.add('show');
+    closeCart();
+  }
+  function closeModal(){
+    document.getElementById('modalOverlay').classList.remove('show');
+  }
+
+  // vibe toggle
+  let confident = false;
+  const quotes = {
+    shy: [
+      '"maybe just thigh highs today, baby steps 🩶"',
+      '"still figuring it out, and that\\'s okay ♡"'
+    ],
+    confident: [
+      '"full outfit, full send, no notes 💅"',
+      '"cute isn\\'t a trend. it\\'s literally me."'
+    ]
+  };
+  function toggleVibe(){
+    confident = !confident;
+    document.getElementById('bowSwitch').classList.toggle('on', confident);
+    document.getElementById('shySide').classList.toggle('active', !confident);
+    document.getElementById('confSide').classList.toggle('active', confident);
+    const arr = confident ? quotes.confident : quotes.shy;
+    document.getElementById('vibeQuote').textContent = arr[Math.floor(Math.random()*arr.length)];
+  }
+
+  // sparkle field generation
+  const sparkleLayer = document.getElementById('sparkleLayer');
+  for(let i=0;i<28;i++){
+    const s = document.createElement('div');
+    s.className = 'sparkle';
+    s.textContent = Math.random() > 0.5 ? '✦' : '♡';
+    s.style.left = Math.random()*100 + 'vw';
+    s.style.top = Math.random()*400 + 'vh';
+    s.style.fontSize = (10 + Math.random()*14) + 'px';
+    s.style.animationDelay = (Math.random()*3) + 's';
+    sparkleLayer.appendChild(s);
+  }
+</script>
 </body>
 </html>
